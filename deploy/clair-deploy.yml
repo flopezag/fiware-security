@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  roles:
+     - openstack-instance-deploy
+     - docker-engine

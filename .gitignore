@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# temporal Ansible execution data
+/deploy/*.retry
+
+# IDE
+.idea

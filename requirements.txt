@@ -1,0 +1,4 @@
+# Python version: 3.7.0
+# Recommendation to configure virtualenv
+ansible==2.7.6
+openstacksdk==0.24.0
