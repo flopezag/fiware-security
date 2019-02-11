@@ -1,0 +1,29 @@
+#########################################
+# Install Clair scripts in the directory
+#########################################
+- name: Create target folder
+  file:
+    path: /home/ubuntu/clair-container-scan
+    state: directory
+
+- name: Copy shell script file (clair-container-scan.sh)
+  copy:
+    src: "{{ role_path }}/files/clair-container-scan.sh"
+    dest: /home/ubuntu/clair-container-scan/clair-container-scan.sh
+
+- name: Copy docker-compose file
+  copy:
+    src: "{{ role_path }}/files/docker-compose.yml"
+    dest: /home/ubuntu/clair-container-scan/docker-compose.yml
+
+- name: Change the current folder
+
+- name: Provide execution permissions to the script clair-container-scan.sh
+
+- name: Execute the script
+
+- name: Get owner email detail from Docker Image's LABELS
+
+- name: Send notification to the owner
+
+- name: Send result file

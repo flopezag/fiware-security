@@ -77,6 +77,7 @@
     wait: yes
     flavor: m1.medium
     network: node-int-net-01
+    auto_ip: no
     meta:
       hostname: fiware-clair
     validate_certs: "{{validate_certs}}"
@@ -120,6 +121,8 @@
 - name: Add FIWARE Clair Instance to Inventory
   add_host: name=FIWAREClair groups=servers
             ansible_ssh_host={{ data.floating_ip.floating_ip_address }}
+            ansible_user=ubuntu
+            ansible_scp_if_ssh=y
 
 - name: Display FIWARE Clair instance’s Floating IP
   debug:
