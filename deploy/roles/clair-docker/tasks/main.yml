@@ -10,20 +10,15 @@
   copy:
     src: "{{ role_path }}/files/clair-container-scan.sh"
     dest: /home/ubuntu/clair-container-scan/clair-container-scan.sh
-
-- name: Copy docker-compose file
-  copy:
-    src: "{{ role_path }}/files/docker-compose.yml"
-    dest: /home/ubuntu/clair-container-scan/docker-compose.yml
-
-- name: Change the current folder
-
-- name: Provide execution permissions to the script clair-container-scan.sh
+    mode: 744
 
 - name: Execute the script
+  command: sh /home/ubuntu/clair-container-scan/clair-container-scan.sh
 
-- name: Get owner email detail from Docker Image's LABELS
+# - name: Change the current folder
 
-- name: Send notification to the owner
+# - name: Get owner email detail from Docker Image's LABELS
 
-- name: Send result file
+# - name: Send notification to the owner
+
+# - name: Send result file

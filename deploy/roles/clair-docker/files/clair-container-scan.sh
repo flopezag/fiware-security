@@ -6,6 +6,10 @@ usage() {
     echo "Options:"
     echo " -p : Pull images before running scan"
     echo " -v : verbose output"
+    echo
+    echo "[IMAGE_NAME] : (Optional) Docker image file to be analysed."
+    echo "               If it is not provided the Docker images are "
+    echo "               obtained from the enablers.json file."
     exit 1
 }
 
@@ -23,6 +27,37 @@ redirect_all() {
     else
         "$@" 2>/dev/null >/dev/null
     fi
+}
+
+security_analysis() {
+    echo "Pulling from "$@"..."
+    redirect_all docker pull "$@"
+    echo
+
+    id=$(docker images | grep -E "$@" | awk -e '{print $3}')
+    labels=$(docker inspect --type=image "$@" 2>/dev/null | jq .[].Config.Labels)
+
+    if [ "$PULL" -eq 1 ];
+    then
+      echo "Pulling Clair content ..."
+      redirect_all docker-compose pull
+      echo
+    fi
+
+    echo "Security analysis of "$@" image..."
+    filename=$(echo "$@" | awk -F '/' '{print $2 ".json"}')
+
+    redirect_stderr docker-compose run --rm scanner "$@" > ${filename}
+    ret=$?
+    echo
+
+    echo "Removing docker instances..."
+    redirect_all docker-compose down
+    echo
+
+    echo "Clean up the docker image..."
+    redirect_all docker rmi ${id}
+    echo
 }
 
 PULL=0
@@ -51,34 +86,22 @@ BASEDIR=$(cd $(dirname "$0") && pwd)
 cd "$BASEDIR"
 
 if [ ! -f "docker-compose.yml" ]; then
-    wget -q https://raw.githubusercontent.com/usr42/clair-container-scan/master/docker-compose.yml
+    wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/docker-compose.yml
 fi
 
-echo "Pulling from "$@"..."
-redirect_all docker pull "$@"
-echo
-
-id=$(docker images | grep -E "$@" | awk -e '{print $3}')
-labels=$(docker inspect --type=image "$@" 2>/dev/null | jq .[].Config.Labels)
-
-if [ "$PULL" -eq 1 ];
-then
-  echo "Pulling Clair content ..."
-  redirect_all docker-compose pull
-  echo
+if [ ! -f "enablers.json" ]; then
+    wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/enablers.json
 fi
 
-echo "Security analysis of "$@" image..."
-redirect_stderr docker-compose run --rm scanner "$@" > a.json
-ret=$?
-echo
-
-echo "Removing docker instances..."
-redirect_all docker-compose down
-echo
-
-echo "Clean up the docker image..."
-redirect_all docker rmi ${id}
-echo
+if [ -n "$1" ]; then
+    security_analysis "$1"
+else
+    for ge in `more enablers.json | jq .enablers[].image | sed 's/"//g'`
+    do
+      security_analysis ${ge}
+      echo
+      echo
+    done
+fi
 
 exit ${ret}

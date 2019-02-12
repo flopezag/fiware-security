@@ -1,0 +1,40 @@
+{
+ "enablers" : [
+   {
+     "name": "orion",
+     "image": "fiware/orion"
+   },
+   {
+     "name": "cygnus",
+     "image": "fiware/cygnus-ngsi"
+   },
+   {
+     "name": "draco",
+     "image": ""
+   },
+   {
+     "name": "quantum leap",
+     "image": "fiware/quantum-leap"
+   },
+   {
+     "name": "sth-comet",
+     "image": "fiware/sth-comet"
+   },
+   {
+     "name": "iot agent for json",
+     "image": "fiware/iotagent-json"
+   },
+   {
+     "name": "iot agent for lwm2m",
+     "image": "fiware/lightweightm2m-iotagent"
+   },
+   {
+     "name": "iot agent for ul",
+     "image": "fiware/iotagent-ul"
+   },
+   {
+     "name": "iot agent for lorawan",
+     "image": "fiware/iotagent-lorawan"
+   }
+ ]
+}
