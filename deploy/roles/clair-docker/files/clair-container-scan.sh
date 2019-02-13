@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 usage() {
     echo "Usage: $0 [-pv] [IMAGE_NAME]"
@@ -14,7 +14,7 @@ usage() {
 }
 
 redirect_stderr() {
-    if [ "$VERBOSE" = 1 ]; then
+    if [[ ${VERBOSE} -eq 1 ]]; then
         "$@"
     else
         "$@" 2>/dev/null
@@ -22,7 +22,7 @@ redirect_stderr() {
 }
 
 redirect_all() {
-    if [ "$VERBOSE" = 1 ]; then
+    if [[ ${VERBOSE} -eq 1 ]]; then
         "$@"
     else
         "$@" 2>/dev/null >/dev/null
@@ -37,7 +37,7 @@ security_analysis() {
     id=$(docker images | grep -E "$@" | awk -e '{print $3}')
     labels=$(docker inspect --type=image "$@" 2>/dev/null | jq .[].Config.Labels)
 
-    if [ "$PULL" -eq 1 ];
+    if [[ ${PULL} -eq 1 ]];
     then
       echo "Pulling Clair content ..."
       redirect_all docker-compose pull
@@ -45,7 +45,9 @@ security_analysis() {
     fi
 
     echo "Security analysis of "$@" image..."
-    filename=$(echo "$@" | awk -F '/' '{print $2 ".json"}')
+    extension="$(date +%Y%m%d_%H%M%S).json"
+    filename=$(echo "$@" | awk -F '/' -v a="$extension" '{print $2 a}')
+    enabler=$(echo "$@" | awk -F '/' '{print $2}')
 
     redirect_stderr docker-compose run --rm scanner "$@" > ${filename}
     ret=$?
@@ -58,13 +60,25 @@ security_analysis() {
     echo "Clean up the docker image..."
     redirect_all docker rmi ${id}
     echo
+
+    line=$(grep 'latest: Pulling from arminc\/clair-db' ${filename})
+
+    # Just for the 1st time...
+    if [[ -n ${line} ]]; then
+	    # Delete first 3 lines of the file due to the first time that it is executed
+	    # it includes 3 extra no needed lines
+	    sed -i '1,3 d' ${filename}
+    fi
+
+    # Just to finish, send the data to the nexus instance
+
 }
 
 PULL=0
 VERBOSE=0
 
 while getopts ":phv" opt; do
-    case $opt in
+    case ${opt} in
         p)
             PULL=1
             ;;
@@ -85,15 +99,15 @@ shift $(($OPTIND -1))
 BASEDIR=$(cd $(dirname "$0") && pwd)
 cd "$BASEDIR"
 
-if [ ! -f "docker-compose.yml" ]; then
+if [[ ! -f "docker-compose.yml" ]]; then
     wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/docker-compose.yml
 fi
 
-if [ ! -f "enablers.json" ]; then
+if [[ ! -f "enablers.json" ]]; then
     wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/enablers.json
 fi
 
-if [ -n "$1" ]; then
+if [[ -n $1 ]]; then
     security_analysis "$1"
 else
     for ge in `more enablers.json | jq .enablers[].image | sed 's/"//g'`

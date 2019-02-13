@@ -8,12 +8,14 @@
 
 - name: Copy shell script file (clair-container-scan.sh)
   copy:
-    src: "{{ role_path }}/files/clair-container-scan.sh"
+    src: clair-container-scan.sh
     dest: /home/ubuntu/clair-container-scan/clair-container-scan.sh
-    mode: 744
+    mode: 0744
 
 - name: Execute the script
-  command: sh /home/ubuntu/clair-container-scan/clair-container-scan.sh
+  shell: ./clair-container-scan.sh
+  args:
+    chdir: /home/ubuntu/clair-container-scan/
 
 # - name: Change the current folder
 
