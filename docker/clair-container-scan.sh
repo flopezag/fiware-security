@@ -1,7 +1,7 @@
 #!/bin/bash
 
-user="{{USER}}"
-password="{{PASSWORD}}"
+user="<username>"
+password="<password>"
 
 usage() {
     echo "Usage: $0 [-pv] [IMAGE_NAME]"
