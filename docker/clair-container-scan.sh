@@ -33,36 +33,31 @@ redirect_all() {
 }
 
 security_analysis() {
-    echo "Pulling from "$@"..."
+    redirect_all echo "Pulling from "$@"..."
     redirect_all docker pull "$@"
-    echo
+    redirect_all echo
 
-    id=$(docker images | grep -E "$@" | awk -e '{print $3}')
     labels=$(docker inspect --type=image "$@" 2>/dev/null | jq .[].Config.Labels)
 
     if [[ ${PULL} -eq 1 ]];
     then
-      echo "Pulling Clair content ..."
+      redirect_all echo "Pulling Clair content ..."
       redirect_all docker-compose pull
-      echo
+      redirect_all echo
     fi
 
-    echo "Security analysis of "$@" image..."
+    redirect_all echo "Security analysis of "$@" image..."
     extension="$(date +%Y%m%d_%H%M%S).json"
     filename=$(echo "$@" | awk -F '/' -v a="$extension" '{print $2 a}')
     enabler=$(echo "$@" | awk -F '/' '{print $2}')
 
     redirect_stderr docker-compose run --rm scanner "$@" > ${filename}
     ret=$?
-    echo
+    redirect_all echo
 
-    echo "Removing docker instances..."
+    redirect_all echo "Removing docker instances..."
     redirect_all docker-compose down
-    echo
-
-    echo "Clean up the docker image..."
-    redirect_all docker rmi ${id}
-    echo
+    redirect_all echo
 
     line=$(grep 'latest: Pulling from arminc\/clair-db' ${filename})
 
@@ -74,10 +69,54 @@ security_analysis() {
     fi
 
     # Just to finish, send the data to the nexus instance
-    redirect_all curl -v -u ${user}':'${password} --upload-file ${filename}  https://nexus.lab.fiware.org/repository/security/check/${enabler}/${filename}
+    redirect_all curl -v -u ${user}':'${password} --upload-file ${filename}  https://nexus.lab.fiware.org/repository/security/check/${enabler}/cve/${filename}
 
     # Send an email to the owner of the FIWARE GE
 
+}
+
+docker_bench_security() {
+    cd ../docker-bench-security
+
+    id=$(docker images | grep -E "$@" | awk -e '{print $3}')
+
+    redirect_all ./docker-bench-security.sh  -t "$@" -c container_images,container_runtime,docker_security_operations
+
+    extension="$(date +%Y%m%d_%H%M%S).json"
+    filename=$(echo "$@" | awk -F '/' -v a="$extension" '{print $2 a}')
+    enabler=$(echo "$@" | awk -F '/' '{print $2}')
+
+    mv docker-bench-security.sh.log.json ${filename}
+
+    redirect_all echo "Clean up the docker image..."
+    redirect_all docker rmi ${id}
+    redirect_all echo
+
+    redirect_all curl -v -u ${user}':'${password} --upload-file ${filename}  https://nexus.lab.fiware.org/repository/security/check/${enabler}/bench-security/${filename}
+
+    cd ../clair-container-scan
+}
+
+init() {
+    BASEDIR=$(cd $(dirname "$0") && pwd)
+    cd "$BASEDIR"
+
+    if [[ ! -f "docker-compose.yml" ]]; then
+        wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/docker-compose.yml
+    fi
+
+    if [[ ! -f "enablers.json" ]]; then
+        wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/enablers.json
+    fi
+
+    cd ..
+
+    if [[ ! -d "docker-bench-security" ]]; then
+        redirect_all git clone https://github.com/docker/docker-bench-security.git
+    fi
+
+    echo $BASEDIR
+    cd "$BASEDIR"
 }
 
 PULL=0
@@ -102,25 +141,18 @@ while getopts ":phv" opt; do
 done
 shift $(($OPTIND -1))
 
-BASEDIR=$(cd $(dirname "$0") && pwd)
-cd "$BASEDIR"
-
-if [[ ! -f "docker-compose.yml" ]]; then
-    wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/docker-compose.yml
-fi
-
-if [[ ! -f "enablers.json" ]]; then
-    wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/docker/enablers.json
-fi
+init
 
 if [[ -n $1 ]]; then
     security_analysis "$1"
+    docker_bench_security "$1"
 else
     for ge in `more enablers.json | jq .enablers[].image | sed 's/"//g'`
     do
       security_analysis ${ge}
-      echo
-      echo
+      docker_bench_security ${ge}
+      redirect_all echo
+      redirect_all echo
     done
 fi
 
