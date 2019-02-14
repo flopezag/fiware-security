@@ -9,9 +9,9 @@
   apt:
     upgrade: dist
 
-- name: Install apt-transport-https, ca-certificates, software-properties-common, jq and ppa-purge
+- name: Install apt-transport-https, ca-certificates, software-properties-common, jq, curl and ppa-purge
   apt:
-    name: ['apt-transport-https', 'ca-certificates', 'software-properties-common', 'jq', 'ppa-purge']
+    name: ['apt-transport-https', 'ca-certificates', 'software-properties-common', 'jq', 'curl', 'ppa-purge']
     update_cache: yes
     state: present
 

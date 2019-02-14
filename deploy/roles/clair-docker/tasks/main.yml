@@ -6,21 +6,14 @@
     path: /home/ubuntu/clair-container-scan
     state: directory
 
-- name: Copy shell script file (clair-container-scan.sh)
-  copy:
-    src: clair-container-scan.sh
-    dest: /home/ubuntu/clair-container-scan/clair-container-scan.sh
-    mode: 0744
+- name: Distribute shell script file
+  template: src=templates/clair-container-scan.sh.j2 dest=/home/ubuntu/clair-container-scan/clair-container-scan.sh mode=0744
 
 - name: Execute the script
   shell: ./clair-container-scan.sh
   args:
     chdir: /home/ubuntu/clair-container-scan/
 
-# - name: Change the current folder
-
 # - name: Get owner email detail from Docker Image's LABELS
 
 # - name: Send notification to the owner
-
-# - name: Send result file

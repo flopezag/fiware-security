@@ -1,5 +1,8 @@
 #!/bin/bash
 
+user="{{USER}}"
+password="{{PASSWORD}}"
+
 usage() {
     echo "Usage: $0 [-pv] [IMAGE_NAME]"
     echo
@@ -71,6 +74,9 @@ security_analysis() {
     fi
 
     # Just to finish, send the data to the nexus instance
+    redirect_all curl -v -u ${user}':'${password} --upload-file ${filename}  https://nexus.lab.fiware.org/repository/security/check/${enabler}/${filename}
+
+    # Send an email to the owner of the FIWARE GE
 
 }
 
