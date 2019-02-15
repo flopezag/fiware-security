@@ -1,4 +1,4 @@
-# Executing Docker Scan locally
+# Executing FIWARE Docker Security Scan locally
 
 This is the option when you want to execute locally the scan over some FIWARE GE or over the
 complete list of FIWARE GEs.

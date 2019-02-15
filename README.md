@@ -6,8 +6,8 @@ Automatically scan a particular local docker image or all local docker container
 with [Clair Vulnerability Scanner](https://github.com/coreos/clair) using 
 [Clair-Scanner](https://github.com/arminc/clair-scanner) and 
 [clair-local-scan](https://github.com/arminc/clair-local-scan) together with together 
-with the Docker Bench for Security to check common best-practices around deploying 
-FIWARE Docker containers in production. 
+with the [Docker Bench for Security](https://github.com/docker/docker-bench-security) 
+to check common best-practices around deploying FIWARE Docker containers in production. 
 
 The tests are all automated, and are inspired by the 
 [CIS Docker Community Edition Benchmark v1.1.0](https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_Community_Edition_Benchmark_v1.1.0.pdf).
