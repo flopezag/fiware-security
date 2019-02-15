@@ -8,7 +8,8 @@ usage() {
     echo
     echo "Options:"
     echo " -p : Pull images before running scan"
-    echo " -v : verbose output"
+    echo " -v : Verbose output"
+    echo " -h : This help message"
     echo
     echo "[IMAGE_NAME] : (Optional) Docker image file to be analysed."
     echo "               If it is not provided the Docker images are "

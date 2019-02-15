@@ -7,10 +7,10 @@
     state: directory
 
 - name: Distribute shell script file
-  template: src=templates/clair-container-scan.sh.j2 dest=/home/ubuntu/clair-container-scan/clair-container-scan.sh mode=0744
+  template: src=templates/container-scan.sh.j2 dest=/home/ubuntu/clair-container-scan/container-scan.sh mode=0744
 
 - name: Execute the script
-  shell: ./clair-container-scan.sh
+  shell: ./container-scan.sh
   args:
     chdir: /home/ubuntu/clair-container-scan/
 
