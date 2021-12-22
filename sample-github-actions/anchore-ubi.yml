@@ -1,0 +1,68 @@
+# This workflow checks out code, builds an image, performs a container image
+# vulnerability scan with Anchore's Grype tool, and integrates the results with GitHub Advanced Security
+# code scanning feature.  For more information on the Anchore scan action usage
+# and parameters, see https://github.com/anchore/scan-action. For more
+# information on Anchore's container image scanning tool Grype, see
+# https://github.com/anchore/grype
+
+# The name of the tested image is "UBI" which is reflected in the Security alerts.
+
+name: Anchore Security Scan for UBI
+
+on:
+    # This currently only tests release builds
+    # Once a week the scan is re-run to check for new vulnerabilities
+    # It can also be re-run manually
+    release:
+        types: [published]
+    schedule:
+        - cron: "0 8 * * 1"
+    workflow_dispatch:
+
+jobs:
+    anchore:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+            - name: Build UBI container
+              uses: docker/build-push-action@v2
+              with:
+                  # The location of the docker file may need to be amended
+                  # The tag name can also be altered if necessary
+                  context: ./docker
+                  tags: localbuild/ubi:latest
+                  push: false
+                  load: true
+                  # The UBI Image has been created using build args and the
+                  # distro used (Red Hat Universal base image) differs from 
+                  # the base image defined in the Dockerfile
+                  build-args: |
+                      BUILDER=registry.access.redhat.com/ubi8/nodejs-14
+                      DISTRO=registry.access.redhat.com/ubi8/nodejs-14-minimal
+                      PACKAGE_MANAGER=yum
+                      USER=1001
+            - name: Security Scan for UBI Image
+              uses: anchore/scan-action@v3
+              id: scan-ubi
+              if: always()
+              with:
+                  image: "localbuild/ubi:latest"
+                  acs-report-enable: true
+                  severity-cutoff: critical
+            # This step adds a file to the resultant GitHub Action
+            # for review      
+            - name: Upload UBI Report
+              uses: actions/upload-artifact@v2
+              if: always()
+              with:
+                  name: ubi-report
+                  path: ${{ steps.scan-ubi.outputs.sarif }}
+            # This step adds the list of security issues directly to the
+            # GitHub reposistory
+            - name: upload Anchore scan SARIF report
+              uses: github/codeql-action/upload-sarif@v1
+              if: always()
+              with:
+                  sarif_file: ${{ steps.scan-ubi.outputs.sarif }}
