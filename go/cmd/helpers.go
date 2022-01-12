@@ -109,3 +109,15 @@ func FindDockerCompose() {
 
 	absPathDockerCompose = path
 }
+
+// Generate the filename corresponding to the image
+func Filename() {
+	// #         extension="$(date +%Y%m%d_%H%M%S)-anchore.json"
+	// #
+	// #         # Extract the name of the docker image
+	// #         short_name=$(echo $i | awk -F '/' '{print $2}' | awk -F ':' '{print $1}')
+	// #         redirect_all echo "$short_name"
+	// #
+	// #         filename=$(echo "$enabler" | awk  -v a="$extension" -v b="$short_name" '{print $0"-"b"-"a}')
+
+}

@@ -1,12 +1,11 @@
+/*
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+
+*/
 package main
 
-import (
-	"fmt"
-	"security/scan/cmd"
-)
+import "security/scan/cmd"
 
 func main() {
-	fmt.Println("Hello World")
-
-	cmd.Scan()
+	cmd.Execute()
 }

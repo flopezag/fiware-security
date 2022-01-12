@@ -23,19 +23,6 @@ var absPathDockerCompose string // global variable to store absolute path of fil
 # export DOCKER_CLIENT_TIMEOUT=200
 # export COMPOSE_HTTP_TIMEOUT=200
 #
-# function usage() {
-#     echo "Usage: $0 [-pv] [IMAGE_NAME]"
-#     echo
-#     echo "Options:"
-#     echo " -p : Pull images before running scan"
-#     echo " -v : verbose output"
-#     echo
-#     echo "[IMAGE_NAME] : (Optional) FIWARE GE name to be analysed."
-#     echo "               It should be present in the enabler.json file."
-#     echo "               If it is not provided the Docker images are "
-#     echo "               obtained from the enablers.json file."
-#     exit 1
-# }
 #
 # function redirect_stderr() {
 #     if [[ ${VERBOSE} -eq 1 ]]; then

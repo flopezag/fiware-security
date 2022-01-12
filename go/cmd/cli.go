@@ -3,7 +3,6 @@ package cmd
 import (
 	commandLine "github.com/urfave/cli/v2"
 
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -30,14 +29,12 @@ In case that a specific FIWARE Generic Enabler is specified, the analysis will b
 on this component.`,
 
 		Action: func(c *commandLine.Context) error {
-			fmt.Printf("Hello %q", c.Args().Get(0))
-
 			commandLine.ShowAppHelp(c)
 
 			return nil
 		},
 
-		UsageText: "scan [global options] [args and such]",
+		UsageText: "scan [global options] [(Optional) FIWARE GE]",
 
 		Flags: []commandLine.Flag{
 			&commandLine.BoolFlag{
