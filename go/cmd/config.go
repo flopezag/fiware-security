@@ -58,11 +58,6 @@ func Search(enabler string) []string {
 	if idx < 0 {
 		fmt.Println("not found")
 		os.Exit(1)
-	} else {
-		fmt.Println("Enabler name found...")
-		for j := 0; j < len(enablers.Enablers[idx].Image); j++ {
-			fmt.Println("Enabler image: " + enablers.Enablers[idx].Image[j])
-		}
 	}
 
 	return enablers.Enablers[idx].Image

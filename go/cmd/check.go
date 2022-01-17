@@ -22,13 +22,20 @@ var checkCmd = &cobra.Command{
 		if len(args) == 0 {
 			// It means that the check operation has not specified FIWARE GE, therefore we scan all the
 			// FIWARE GEs described in the configuration file (enablers.json)
-			fmt.Println("Scanning all FIWARE GEneric Enablers...")
+			fmt.Println("Scanning all FIWARE Generic Enablers...")
 		} else if len(args) == 1 {
 			// We have received a specific FIWARE GE to scan
 			ge := args[0]
 			fmt.Println("FIWARE GE to scan: " + ge)
 			ParseJSON()
-			Search(ge)
+			var images []string
+
+			images = Search(ge)
+
+			for j := 0; j < len(images); j++ {
+				out := Filename(ge, images[j])
+				Anchore(images[j], out)
+			}
 		}
 
 		// Check the arguments to see if we want to check all GEs (no data after check command or only

@@ -2,13 +2,14 @@ package cmd
 
 import "fmt"
 
-func Anchore(enabler string) {
+func Anchore(enabler, filename string) {
 
-	fmt.Println(enabler)
-	// #     fmt.Println(
-	// #     fmt.Println( "Anchore Security Scan... "
-	// #     enabler=$@
-	// #
+	filename = filename + "_Anchore.json"
+
+	fmt.Println("Anchore Security Scan... ")
+	fmt.Println("    Docker image: ", enabler)
+	fmt.Println("    Output file: ", filename)
+
 	// #     redirect_all echo $(pwd)
 	// #     cd ./anchore
 	// #
@@ -22,15 +23,6 @@ func Anchore(enabler string) {
 	// #     do
 	// #         # call your procedure/other scripts here below
 	// #         redirect_all echo "$i"
-	// #
-	// #         extension="$(date +%Y%m%d_%H%M%S)-anchore.json"
-	// #
-	// #         # Extract the name of the docker image
-	// #         short_name=$(echo $i | awk -F '/' '{print $2}' | awk -F ':' '{print $1}')
-	// #         redirect_all echo "$short_name"
-	// #
-	// #         filename=$(echo "$enabler" | awk  -v a="$extension" -v b="$short_name" '{print $0"-"b"-"a}')
-	// #
 	// #
 	// #         redirect_all docker pull $i
 	// #
