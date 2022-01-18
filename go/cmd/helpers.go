@@ -105,9 +105,8 @@ func CheckDockerCompose() string {
 func FindDockerCompose() {
 	path, err := exec.LookPath("docker-compose")
 	if err != nil {
-		log.Fatal("installing fortune is in your future")
+		log.Fatal("It is needed to have installed Docker Compose to run the security scan analysis")
 	}
-	fmt.Printf("fortune is available at %s\n", path)
 
 	absPathDockerCompose = path
 }

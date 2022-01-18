@@ -19,6 +19,8 @@ var checkCmd = &cobra.Command{
 	Enabler is specified, the analysis will be developed only on this component.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
+		initialize()
+
 		if len(args) == 0 {
 			// It means that the check operation has not specified FIWARE GE, therefore we scan all the
 			// FIWARE GEs described in the configuration file (enablers.json)
@@ -38,7 +40,7 @@ var checkCmd = &cobra.Command{
 			}
 		}
 
-		// Check the arguments to see if we want to check all GEs (no data after check command or only
+		clean()
 	},
 }
 

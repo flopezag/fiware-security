@@ -14,7 +14,7 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "scan",
-	Short: "Scan analysis of a FIWARE Generic Enabler",
+	Short: "Security scan analysis of a FIWARE Generic Enablers",
 	Long: `This program searchs Docker Images vulnerabilities in the FIWARE Generic Enablers based on Anchore 
 	and Clair tools and provide a set of best practices of a running instance of them based on a docker 
 	compose file.
@@ -25,6 +25,11 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
+	/*
+		Version:   "v0.1.0",
+		Compiled:  time.Now(),
+		Copyright: "(c) 2022 FIWARE Foundation, e.V.",
+	*/
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

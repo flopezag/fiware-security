@@ -282,13 +282,13 @@ func initialize() {
 	// Step 2: Verify service availability
 
 	// Step 3: Wait until the vulnarabilities dictionary is download
-	fmt.Print("Waiting vulnerability dictionary downloas... ")
+	fmt.Print("Waiting vulnerability dictionary downloads... ")
 	err = exec.Command(absPathDockerCompose, "-f docker-compose-anchore.yaml exec api anchore-cli system wait").Run()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(-1)
 	} else {
-		fmt.Println("Finished")
+		fmt.Print("Finished\n\n")
 	}
 
 	// Change to the original directory
@@ -380,12 +380,4 @@ func clean() {
 	//    }
 	//  fmt.Println("Success")
 	// }
-}
-
-func Scan() {
-	//Anchore("fiware/orion-ld:latest")
-	//Security_analysis("fiware/orion-ld:latest")
-	//Docker_bench_security("fiware/orion-ld:latest")
-
-	Init()
 }
