@@ -5,6 +5,9 @@
             "image": [
                 "fiware/cygnus-ngsi"
             ],
+            "repository": [
+
+            ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-cygnus.yml",
             "exclude": [
                 "mongo"
@@ -16,6 +19,9 @@
             "image": [
                 "ging/fiware-draco:latest"
             ],
+            "repository": [
+
+            ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-draco.yml",
             "exclude": [],
             "email": "joseandres.munoz@upm.es"
@@ -25,6 +31,9 @@
             "image": [
                 "fiware/sigfox-iotagent:latest"
             ],
+            "repository": [
+
+            ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-sigfox.yml",
             "exclude": ["fiware/orion"],
             "email": "fernando.lopez@fiware.org"
@@ -33,6 +42,9 @@
             "name": "Keyrock",
             "image": [
                 "fiware/idm:latest"
+            ],
+            "repository": [
+
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-keyrock.yml",
             "exclude": [
@@ -45,6 +57,9 @@
             "image": [
                 "fiware/orion:latest"
             ],
+            "repository": [
+
+            ],
             "compose": "https://raw.githubusercontent.com/telefonicaid/fiware-orion/master/docker/docker-compose.yml",
             "exclude": [],
             "email": "telefonica.fiware@gmail.com"
@@ -54,6 +69,9 @@
             "image": [
                 "fiware/orion-ld:latest"
             ],
+            "repository": [
+                "https://github.com/FIWARE/context.Orion-LD"
+            ],
             "compose": "https://raw.githubusercontent.com/FIWARE/context.Orion-LD/develop/docker/docker-compose.yml",
             "exclude": [],
             "email": "ken.zangelin@fiware.org"
@@ -62,6 +80,9 @@
             "name": "QuantumLeap",
             "image": [
                 "smartsdk/quantumleap:latest"
+            ],
+            "repository": [
+
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-quantumleap.yml",
             "exclude": [],
@@ -76,6 +97,9 @@
                 "stellio/stellio-search-service:dev",
                 "stellio/stellio-subscription-service:dev"
             ],
+            "repository": [
+
+            ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
             "exclude": [
                 "confluentinc/cp-zookeeper", 
@@ -88,6 +112,9 @@
             "image": [
                 "fiware/pep-proxy:latest"
             ],
+            "repository": [
+
+            ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-wilma.yml",
             "exclude": [
                 "fiware/idm:latest,mysql:5.7"
@@ -98,6 +125,9 @@
             "name": "Wirecloud",
             "image": [
                 "fiware/wirecloud:latest"
+            ],
+            "repository": [
+
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-wirecloud.yml",
             "exclude": [

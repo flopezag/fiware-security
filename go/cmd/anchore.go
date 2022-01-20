@@ -3,6 +3,8 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -11,7 +13,7 @@ func Anchore(enabler, filename string) {
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 
-	filename = filename + "_Anchore.json"
+	filename = filename + "_anchore.json"
 
 	fmt.Println("Anchore Security Scan... ")
 	fmt.Println("    Docker image: ", enabler)
@@ -21,18 +23,8 @@ func Anchore(enabler, filename string) {
 	err := os.Chdir("./Anchore")
 	CheckIfError(err)
 
-	// Step 1: Pull the docker image
-	fmt.Print("\n    Pulling image... ")
-	err = exec.Command("docker", "pull", enabler).Run()
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(-1)
-	} else {
-		fmt.Println("Success")
-	}
-
-	// Step 2: Add the FIWARE Enabler to be analysed
-	// redirect_all docker-compose -f docker-compose-anchore.yaml exec api anchore-cli image add $i
+	// Step 1: Add the FIWARE Enabler to be analysed
+	// docker-compose -f docker-compose-anchore.yaml exec api anchore-cli image add $enabler
 	fmt.Print("    Adding the FIWARE Enabler to be analysed... ")
 	cmd := exec.Command(absPathDockerCompose, "-f", "docker-compose-anchore.yaml", "exec", "-T", "api", "anchore-cli", "image", "add", enabler)
 	cmd.Stdout = &out
@@ -46,7 +38,8 @@ func Anchore(enabler, filename string) {
 		fmt.Printf("         Result:\n%8v\n", out.String())
 	}
 
-	// Step 3: Wait until the analysis is finished (it needs some time)
+	// Step 2: Wait until the analysis is finished (it needs some time)
+	// docker-compose -f docker-compose-anchore.yaml exec -T api anchore-cli image wait $enabler
 	fmt.Print("    Waiting until the analysis is finished... ")
 	out.Reset()
 	stderr.Reset()
@@ -62,7 +55,9 @@ func Anchore(enabler, filename string) {
 		fmt.Printf("         Result:\n%8v\n", out.String())
 	}
 
-	// Step 4: Get the list of vulnerabilities
+	// Step 3: Get the list of vulnerabilities
+	// docker-compose -f docker-compose-anchore.yaml exec -T api anchore-cli --json image vuln $enabler all
+
 	fmt.Print("    Getting the list of vulnerabilities... ")
 	out.Reset()
 	stderr.Reset()
@@ -77,7 +72,12 @@ func Anchore(enabler, filename string) {
 		fmt.Println("Success")
 		fmt.Printf("         Result:\n%8v\n", out.String())
 
-		// Step 5: Save the out into filename
+		// Step 4: Save the out into filename
+		err = ioutil.WriteFile(filename, out.Bytes(), 0644)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// Just to finish, send the data to the nexus instance

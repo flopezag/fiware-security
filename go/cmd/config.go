@@ -29,11 +29,12 @@ type Enablers struct {
 
 // Enabler struct which contains a name, an image, a compose, an exclude, and an email
 type Enabler struct {
-	Name    string   `json:"name"`
-	Image   []string `json:"image"`
-	Compose string   `json:"compose"`
-	Exclude []string `json:"exclude"`
-	Email   string   `json:"email"`
+	Name       string   `json:"name"`
+	Image      []string `json:"image"`
+	Repository []string `json:"repository"`
+	Compose    string   `json:"compose"`
+	Exclude    []string `json:"exclude"`
+	Email      string   `json:"email"`
 }
 
 // we initialize our Enablers array
@@ -48,7 +49,9 @@ func search(length int, f func(index int) bool) int {
 	return -1
 }
 
-func Search(enabler string) []string {
+func Search(enabler, attribute string) []string {
+	var result []string
+
 	// Find the data of a specific FIWARE GE
 	// Build a config map:
 	idx := search(len(enablers.Enablers), func(index int) bool {
@@ -60,7 +63,16 @@ func Search(enabler string) []string {
 		os.Exit(1)
 	}
 
-	return enablers.Enablers[idx].Image
+	if attribute == "Image" {
+		result = enablers.Enablers[idx].Image
+	} else if attribute == "Repository" {
+		result = enablers.Enablers[idx].Repository
+	} else {
+		fmt.Println("Attribute not found: " + attribute)
+		os.Exit(1)
+	}
+
+	return result
 }
 
 func ParseJSON() {

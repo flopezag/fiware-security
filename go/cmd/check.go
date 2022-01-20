@@ -6,6 +6,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -32,11 +34,31 @@ var checkCmd = &cobra.Command{
 			ParseJSON()
 			var images []string
 
-			images = Search(ge)
+			images = Search(ge, "Image")
 
 			for j := 0; j < len(images); j++ {
 				out := Filename(ge, images[j])
+
+				// Step 0: Pull the docker image
+				fmt.Print("\nPulling image... ")
+				err := exec.Command("docker", "pull", images[j]).Run()
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(-1)
+				} else {
+					fmt.Print("Success\n\n")
+				}
+
 				Anchore(images[j], out)
+				Clair(images[j], out)
+				Docker_bench_security(images[j], out)
+			}
+
+			repositories := Search(ge, "Repository")
+			for j := 0; j < len(repositories); j++ {
+				out := Filename(ge, repositories[j])
+
+				Gitleaks(repositories[j], out)
 			}
 		}
 

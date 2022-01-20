@@ -1,16 +1,26 @@
 package cmd
 
-import "fmt"
+import (
+	//"bytes"
+	"fmt"
+	"os"
+)
 
-func Docker_bench_security(enabler string) {
+func Docker_bench_security(enabler, filename string) {
+	//var out bytes.Buffer
+	//var stderr bytes.Buffer
 
-	fmt.Println(enabler)
-	// #     echo
-	// #     echo "Docker Bench Security Scan... "
-	// #     enabler=$@
-	// #
-	// #     cd ./docker-bench-security
-	// #
+	filename = filename + "_clair.json"
+
+	fmt.Println("Docker Bench Security Scan... ")
+	fmt.Println("    Docker image: ", enabler)
+	fmt.Println("    Output file: ", filename)
+
+	// Change to the Clair folder to execute the analysis
+	err := os.Chdir("./Docker-Bench-Security")
+	CheckIfError(err)
+
+	// Step 1: Creating an instance of the GE ${enabler}
 	// #     redirect_all echo "Creating an instance of the GE ${enabler}"
 	// #     cmd='.enablers[] | select(.name == "'${enabler}'") | .compose'
 	// #     compose=$(jq -r "${cmd}" enablers.json)
@@ -45,4 +55,8 @@ func Docker_bench_security(enabler string) {
 	// #
 	// #     cd ..
 	// #
+
+	// Return to the original folder
+	err = os.Chdir("..")
+	CheckIfError(err)
 }

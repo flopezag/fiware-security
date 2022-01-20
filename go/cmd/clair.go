@@ -1,56 +1,56 @@
 package cmd
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+)
 
-func Security_analysis(enabler string) {
+func Clair(enabler, filename string) {
+	var out bytes.Buffer
+	var stderr bytes.Buffer
 
-	fmt.Println(enabler)
-	// #     fmt.Println(
-	// #     fmt.Println( "Clair CVE Security Scan... "
-	// #
-	// #     enabler=$@
-	// #
-	// #     redirect_all echo "Pulling from "$enabler"..."
-	// #
-	// #     # Get the list of docker images from the enabler.json taking into account the FIWARE GE name
-	// #     cmd='.enablers[] | select(.name == "'${enabler}'") | .image'
-	// #     images=$(jq -r "${cmd}" enablers.json)
-	// #
-	// #     filename_clair=""
-	// #
-	// #     # From the images, we need to iterate for the different values
-	// #     for i in ${images//,/ }
-	// #     do
-	// #         # call your procedure/other scripts here below
-	// #         redirect_all echo "$i"
-	// #
-	// #         redirect_all docker pull "$i"
-	// #         redirect_all echo
-	// #
-	// #         labels=$(docker inspect --type=image "$i" 2>/dev/null | jq .[].Config.Labels)
-	// #
-	// #         if [[ ${PULL} -eq 1 ]];
-	// #         then
-	// #           redirect_all echo "Pulling Clair content ..."
-	// #           redirect_all docker-compose pull
-	// #           redirect_all echo
-	// #         fi
-	// #
-	// #         redirect_all echo "Security analysis of "$i" image..."
-	// #         extension="$(date +%Y%m%d_%H%M%S)-cve.json"
-	// #         # filename=$(echo "$i" | awk -F '/' -v a="$extension" '{print $2 a}')
-	// #         # enabler=$(echo "$i" | awk -F '/' '{print $2}')
-	// #
-	// #         # Extract the name of the docker image
-	// #         short_name=$(echo $i | awk -F '/' '{print $2}' | awk -F ':' '{print $1}')
-	// #         redirect_all echo "$short_name"
-	// #
-	// #         filename=$(echo "$enabler" | awk  -v a="$extension" -v b="$short_name" '{print $0"-"b"-"a}')
-	// #
-	// #         redirect_stderr docker-compose run --rm scanner "$i" > ${filename}
-	// #         ret=$?
-	// #         redirect_all echo
-	// #
+	filename = filename + "_clair.json"
+
+	fmt.Println("Clair CVE Security Scan... ")
+	fmt.Println("    Docker image: ", enabler)
+	fmt.Println("    Output file: ", filename)
+
+	// Change to the Clair folder to execute the analysis
+	err := os.Chdir("./Clair")
+	CheckIfError(err)
+
+	// Step 1:
+	fmt.Print("    Security analysis of " + enabler + " image...")
+	cmd := exec.Command(absPathDockerCompose, "run", "--rm", "scanner", enabler)
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+		os.Exit(-1)
+	} else {
+		fmt.Println("Success")
+		fmt.Printf("         Result:\n%8v\n", out.String())
+
+		// Step 2: Filtering the line from the result analysis
+		result := out.Bytes()
+		index := bytes.Index(result, []byte("latest: Pulling from arminc/clair-db"))
+		if index != 0 {
+			// We need to delete the 3 first lines of the result
+			fmt.Println("        Deleting the 3 lines of the output")
+		}
+
+		// Step 3: Save the out into filename
+		err = ioutil.WriteFile(filename, result, 0644)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 	// #         # Filtering the line from the result analysis
 	// #         line=$(grep 'latest: Pulling from arminc\/clair-db' ${filename})
 	// #
@@ -72,4 +72,8 @@ func Security_analysis(enabler string) {
 	// #     filename_clair=${filename_clair::-1}
 	// # }
 	// #
+
+	// Return to the original folder
+	err = os.Chdir("..")
+	CheckIfError(err)
 }

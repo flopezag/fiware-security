@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
@@ -223,7 +224,12 @@ var absPathDockerCompose string // global variable to store absolute path of fil
 # exit ${ret} */
 
 func initialize() {
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+
 	fmt.Println("\nInitialize the scan...")
+	// Localize docker-compose program
+	FindDockerCompose()
 
 	// We want to create the corresponding folders for Clair, Ancoher, amd Docker Bench Security
 	path, err := os.Getwd()
@@ -234,9 +240,32 @@ func initialize() {
 	Create_folder(path + "/Anchore")
 	Create_folder(path + "/Docker-Bench-Security")
 	Create_folder(path + "/Clair")
+	Create_folder(path + "/Gitleaks")
 
 	// Download the CVE_Severity_Scan docker compose yaml file in order to execute the Clair
 	DownloadFile("https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/cve_severity_scan.yml", path+"/Clair/docker-compose.yml")
+
+	// Change to the Clair directory
+	err = os.Chdir("Clair")
+	CheckIfError(err)
+
+	// Pull the Clair content
+	fmt.Print("Pulling Clair content... ")
+	cmd := exec.Command(absPathDockerCompose, "pull")
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+		os.Exit(-1)
+	} else {
+		fmt.Println("Success")
+		// fmt.Printf("         Result:\n%8v\n", out.String())
+	}
+
+	// Change to the initial directory
+	err = os.Chdir("..")
+	CheckIfError(err)
 
 	// Download the enablers configuration file and copy the file to the three folders
 	DownloadFile("https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/enablers.json", "enablers.json")
@@ -265,10 +294,7 @@ func initialize() {
 	// Download the possible new version of the docker-compose.yaml file
 	DownloadFile("https://engine.anchore.io/docs/quickstart/docker-compose.yaml", "docker-compose-anchore.yaml")
 
-	// Localize docker-compose program
-	FindDockerCompose()
-
-	// Step 1: Start Anchore engine
+	// Start Anchore engine
 	// #     redirect_all docker-compose -f docker-compose-anchore.yaml up -d
 	fmt.Print("Starting Anchore engine... ")
 	err = exec.Command(absPathDockerCompose, "-f", "docker-compose-anchore.yaml", "up", "-d").Run()
@@ -279,9 +305,9 @@ func initialize() {
 		fmt.Println("Success")
 	}
 
-	// Step 2: Verify service availability
+	// Verify service availability
 
-	// Step 3: Wait until the vulnarabilities dictionary is download
+	// Wait until the vulnarabilities dictionary is download
 	fmt.Print("Waiting vulnerability dictionary downloads... ")
 	err = exec.Command(absPathDockerCompose, "-f docker-compose-anchore.yaml exec api anchore-cli system wait").Run()
 	if err != nil {
