@@ -7,9 +7,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/zricethezav/gitleaks/v8/report"
@@ -130,6 +132,26 @@ func Filename(component, filename string) string {
 	match := re.FindAllStringSubmatch(filename, -1)
 
 	result = component + "_" + match[0][2] + "_" + extension
+
+	return result
+}
+
+func FilenameFromUrl(component, uri string) string {
+	var result string
+
+	// Getting the current time
+	t := time.Now()
+	extension := fmt.Sprintf("%d%02d%02d_%02d%02d", t.Year(), int(t.Month()), t.Day(), t.Hour(), t.Minute())
+
+	u, err := url.Parse(uri)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(u.Path)
+	res := strings.Split(u.Path, "/")
+
+	result = component + "_" + res[len(res)-1] + "_" + extension
 
 	return result
 }

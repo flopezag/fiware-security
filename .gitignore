@@ -108,6 +108,8 @@ venv.bak/
 
 # IDE
 .idea
+.vscode
+go/.vscode
 
 # Execution results
 ./results/*.json
@@ -127,5 +129,5 @@ deploy/ansible/keypair
 results
 
 # Data analysis of security reports temporal files
-./helpers/*.json
-./helpers/*.png
+helpers/*.json
+helpers/*.png

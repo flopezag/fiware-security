@@ -4,6 +4,7 @@ import (
 	//"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -39,12 +40,9 @@ func Gitleaks(enabler_repository, filename string) {
 	CheckIfError(err)
 
 	// Clone the given repository to the given directory
-	Info("git clone ", enabler_repository)
+	fmt.Println("\n    git clone ", enabler_repository)
 
-	_, err = git.PlainClone(".", false, &git.CloneOptions{
-		URL:      enabler_repository,
-		Progress: os.Stdout,
-	})
+	_, err = git.PlainClone(".", false, &git.CloneOptions{URL: enabler_repository})
 
 	CheckIfError(err)
 
@@ -56,13 +54,15 @@ func Gitleaks(enabler_repository, filename string) {
 		os.Exit(1)
 	}
 
+	if cfg.Path == "" {
+		cfg.Path = filepath.Join("../config", "gitleaks.toml")
+	}
+
 	fmt.Println(cfg)
 
 	start := time.Now()
 
-	logOpts := ""
-
-	files, err := gl.GitLog(enabler_repository, logOpts)
+	files, err := gl.GitLog(".", "")
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Failed to get git log")
@@ -81,7 +81,7 @@ func Gitleaks(enabler_repository, filename string) {
 		fmt.Println("no leaks found")
 	}
 
-	source := "./context.Orion-LD"
+	source := "."
 	findings, err = detect.FromFiles(source, cfg, options)
 	if err != nil {
 		fmt.Println("Failed to scan files")

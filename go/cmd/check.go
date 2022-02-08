@@ -47,14 +47,15 @@ var checkCmd = &cobra.Command{
 					fmt.Print("Success\n\n")
 				}
 
+				fmt.Println(out)
 				//Anchore(images[j], out)
 				//Clair(images[j], out)
-				Docker_bench_security(images[j], out)
+				//Docker_bench_security(images[j], out)
 			}
 
 			repositories := Search(ge, "Repository")
 			for j := 0; j < len(repositories); j++ {
-				out := Filename(ge, repositories[j])
+				out := FilenameFromUrl(ge, repositories[j])
 
 				Gitleaks(repositories[j], out)
 			}
