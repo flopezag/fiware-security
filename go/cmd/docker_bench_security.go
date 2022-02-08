@@ -55,6 +55,7 @@ func Docker_bench_security(enabler, filename string) {
 	// #
 	// #     cd ..
 	// #
+	fmt.Println()
 
 	// Return to the original folder
 	err = os.Chdir("..")

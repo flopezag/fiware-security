@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -10,6 +11,8 @@ import (
 	"os/exec"
 	"regexp"
 	"time"
+
+	"github.com/zricethezav/gitleaks/v8/report"
 )
 
 var Docker_Compose string // global variable to store absolute path of filename.
@@ -105,7 +108,9 @@ func CheckDockerCompose() string {
 func FindDockerCompose() {
 	path, err := exec.LookPath("docker-compose")
 	if err != nil {
-		log.Fatal("It is needed to have installed Docker Compose to run the security scan analysis")
+		fmt.Println(err)
+		log.Fatal("We cannot find the 'docker-compose' in the PATH variable.\n" +
+			"It is needed to have installed and configured Docker Compose to run this security scan analysis")
 	}
 
 	absPathDockerCompose = path
@@ -127,4 +132,19 @@ func Filename(component, filename string) string {
 	result = component + "_" + match[0][2] + "_" + extension
 
 	return result
+}
+
+func writeJson(findings []report.Finding, filename string) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+
+	if len(findings) == 0 {
+		findings = []report.Finding{}
+	}
+
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", " ")
+	return encoder.Encode(findings)
 }

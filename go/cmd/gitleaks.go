@@ -4,21 +4,92 @@ import (
 	//"bytes"
 	"fmt"
 	"os"
+	"strings"
+	"time"
+
+	"github.com/spf13/viper"
+
+	"github.com/zricethezav/gitleaks/v8/config"
+	"github.com/zricethezav/gitleaks/v8/detect"
+	gl "github.com/zricethezav/gitleaks/v8/git"
+	"github.com/zricethezav/gitleaks/v8/report"
+
+	git "github.com/go-git/go-git/v5"
 )
 
-func Gitleaks(enabler, filename string) {
-	//var out bytes.Buffer
-	//var stderr bytes.Buffer
+func Gitleaks(enabler_repository, filename string) {
+	// Get gitloeaks config
+	viper.SetConfigType("toml")
+	viper.ReadConfig(strings.NewReader("./config/gitleaks.toml"))
 
-	filename = filename + "_clair.json"
+	var (
+		vc       config.ViperConfig
+		findings []report.Finding
+		err      error
+	)
+
+	filename = filename + "_gitleaks.json"
 
 	fmt.Println("Audit git repository for secrets... ")
-	fmt.Println("    Docker image: ", enabler)
+	fmt.Println("    Enabler repository: ", enabler_repository)
 	fmt.Println("    Output file: ", filename)
 
-	// Change to the Clair folder to execute the analysis
-	err := os.Chdir("./Gitleaks")
+	// Change to the Gitleaks folder to execute the analysis
+	err = os.Chdir("./Gitleaks")
 	CheckIfError(err)
+
+	// Clone the given repository to the given directory
+	Info("git clone ", enabler_repository)
+
+	_, err = git.PlainClone(".", false, &git.CloneOptions{
+		URL:      enabler_repository,
+		Progress: os.Stdout,
+	})
+
+	CheckIfError(err)
+
+	viper.Unmarshal(&vc)
+	cfg, err := vc.Translate()
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Failed to load config")
+		os.Exit(1)
+	}
+
+	fmt.Println(cfg)
+
+	start := time.Now()
+
+	logOpts := ""
+
+	files, err := gl.GitLog(enabler_repository, logOpts)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Failed to get git log")
+		os.Exit(1)
+	}
+
+	fmt.Println(files)
+
+	options := detect.Options{Verbose: false, Redact: false}
+
+	findings = detect.FromGit(files, cfg, options)
+
+	if len(findings) != 0 {
+		fmt.Println("leaks found: ", len(findings))
+	} else {
+		fmt.Println("no leaks found")
+	}
+
+	source := "./context.Orion-LD"
+	findings, err = detect.FromFiles(source, cfg, options)
+	if err != nil {
+		fmt.Println("Failed to scan files")
+	}
+
+	fmt.Println("scan completed in ", time.Since(start), " seconds")
+
+	writeJson(findings, filename)
 
 	/*
 			Get the last version of the software
@@ -57,6 +128,8 @@ func Gitleaks(enabler, filename string) {
 		Source: https://computingforgeeks.com/gitleaks-audit-git-repos-for-secrets/
 
 	*/
+
+	// Delete the cloned repository
 
 	// Return to the original folder
 	err = os.Chdir("..")

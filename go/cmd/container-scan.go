@@ -3,14 +3,18 @@ package cmd
 import (
 	"bytes"
 	"context"
+	// "encoding/json"
 	"fmt"
+	// "io/ioutil"
 	"log"
+	// "net/http"
 	"os"
 	"os/exec"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/go-git/go-git/v5"
+	//"github.com/google/go-github/github"
 )
 
 var absPathDockerCompose string // global variable to store absolute path of filename.
@@ -224,8 +228,11 @@ var absPathDockerCompose string // global variable to store absolute path of fil
 # exit ${ret} */
 
 func initialize() {
-	var out bytes.Buffer
-	var stderr bytes.Buffer
+	var (
+		out    bytes.Buffer
+		stderr bytes.Buffer
+		err    error
+	)
 
 	fmt.Println("\nInitialize the scan...")
 	// Localize docker-compose program
@@ -317,9 +324,63 @@ func initialize() {
 		fmt.Print("Finished\n\n")
 	}
 
+	// Change to the Gitleaks directory
+	/*
+		err = os.Chdir("../Gitleaks")
+		CheckIfError(err)
+
+		*
+				curl -s  https://api.github.com/repos/zricethezav/gitleaks/releases/latest | jq -r '.assets[] | select(.name == "gitleaks-darwin-amd64") | .browser_download_url' | wget -i -
+
+
+			Move the software to the final name and give permissions
+
+			mv gitleaks-darwin-amd64 gitleaks
+			chmod 764 gitleaks
+		*
+		resp, err := http.Get("https://api.github.com/repos/zricethezav/gitleaks/releases/latest")
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(string(body))
+		fmt.Println()
+		fmt.Println()
+
+		// prepare result
+		result := make(map[string]interface{})
+		json.Unmarshal(body, &result)
+
+		fmt.Println(result["assets"])
+		*
+			client := github.NewClient(nil)
+			opt := &github.ListOptions{Page: 2, PerPage: 10}
+
+			releases, rsp, err := client.Repositories.ListReleases(context.Background(), "zricethezav", "gitleaks", opt)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			fmt.Printf("\n%+v\n", releases)
+			fmt.Printf("\n%+v\n", rsp)
+
+			client.Repositories
+		*
+	*/
 	// Change to the original directory
 	err = os.Chdir("..")
 	CheckIfError(err)
+
+	// os.Exit(0)
 }
 
 func clean() {

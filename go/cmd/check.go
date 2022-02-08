@@ -32,9 +32,7 @@ var checkCmd = &cobra.Command{
 			ge := args[0]
 			fmt.Println("FIWARE GE to scan: " + ge)
 			ParseJSON()
-			var images []string
-
-			images = Search(ge, "Image")
+			var images []string = Search(ge, "Image")
 
 			for j := 0; j < len(images); j++ {
 				out := Filename(ge, images[j])
@@ -49,8 +47,8 @@ var checkCmd = &cobra.Command{
 					fmt.Print("Success\n\n")
 				}
 
-				Anchore(images[j], out)
-				Clair(images[j], out)
+				//Anchore(images[j], out)
+				//Clair(images[j], out)
 				Docker_bench_security(images[j], out)
 			}
 
