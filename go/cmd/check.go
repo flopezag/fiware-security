@@ -54,11 +54,14 @@ var checkCmd = &cobra.Command{
 			}
 
 			repositories := Search(ge, "Repository")
+			fmt.Println(repositories)
+
 			for j := 0; j < len(repositories); j++ {
 				out := FilenameFromUrl(ge, repositories[j])
 
 				Gitleaks(repositories[j], out)
 			}
+
 		}
 
 		clean()

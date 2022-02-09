@@ -131,3 +131,10 @@ results
 # Data analysis of security reports temporal files
 helpers/*.json
 helpers/*.png
+
+# Temporal folders to execute the scanning process
+Anchore/
+Clair/
+Gitleaks/
+Docker-Bench-Security/
+

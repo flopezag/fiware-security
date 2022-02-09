@@ -325,6 +325,9 @@ func initialize() {
 	}
 
 	// Change to the Gitleaks directory
+	// Initialize gitleaks rules
+	InitRules()
+
 	/*
 		err = os.Chdir("../Gitleaks")
 		CheckIfError(err)
