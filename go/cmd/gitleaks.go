@@ -2,8 +2,10 @@ package cmd
 
 import (
 	//"bytes"
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -11,20 +13,22 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/zricethezav/gitleaks/v8/config"
-	"github.com/zricethezav/gitleaks/v8/detect"
+	//"github.com/zricethezav/gitleaks/v8/detect"
 	gl "github.com/zricethezav/gitleaks/v8/git"
-	"github.com/zricethezav/gitleaks/v8/report"
+	//"github.com/zricethezav/gitleaks/v8/report"
 
 	git "github.com/go-git/go-git/v5"
 )
 
 func Gitleaks(enabler_repository, filename string) {
 	var (
-		vc               config.ViperConfig
-		findingsFromGit  []report.Finding
-		findingsFromFile []report.Finding
-		findings         []report.Finding
-		err              error
+		vc config.ViperConfig
+		//findingsFromGit  []report.Finding
+		//findingsFromFile []report.Finding
+		//findings         []report.Finding
+		out    bytes.Buffer
+		stderr bytes.Buffer
+		err    error
 	)
 
 	filename = filename + "_gitleaks.json"
@@ -55,9 +59,8 @@ func Gitleaks(enabler_repository, filename string) {
 		cfg.Path = filepath.Join("../config", "gitleaks.toml")
 	}
 
-	fmt.Println(cfg)
-
 	start := time.Now()
+	fmt.Println(start)
 
 	files, err := gl.GitLog(".", "")
 	if err != nil {
@@ -65,40 +68,54 @@ func Gitleaks(enabler_repository, filename string) {
 		fmt.Println("Failed to get git log")
 		return
 	}
-
 	fmt.Println(files)
+	/*
+		options := detect.Options{Verbose: false, Redact: false}
 
-	options := detect.Options{Verbose: false, Redact: false}
+		findingsFromGit = detect.FromGit(files, cfg, options)
 
-	findingsFromGit = detect.FromGit(files, cfg, options)
+		findingsFromFile, err = detect.FromFiles(".", cfg, options)
+		if err != nil {
+			fmt.Println("Failed to scan files")
+		}
 
-	findingsFromFile, err = detect.FromFiles(".", cfg, options)
-	if err != nil {
-		fmt.Println("Failed to scan files")
-	}
+		findings = findingsFromGit
+		for j := 0; j < len(findingsFromFile); j++ {
+			findings = append(findings, findingsFromFile[j])
+		}
 
-	findings = findingsFromGit
-	for j := 0; j < len(findingsFromFile); j++ {
-		findings = append(findings, findingsFromFile[j])
-	}
+		if len(findings) != 0 {
+			fmt.Println("leaks found in Git: ", len(findings))
+		} else {
+			fmt.Println("no leaks found")
+		}
 
-	if len(findings) != 0 {
-		fmt.Println("leaks found in Git: ", len(findings))
-	} else {
-		fmt.Println("no leaks found")
-	}
+		fmt.Println("scan completed in ", time.Since(start), " seconds")
 
-	fmt.Println("scan completed in ", time.Since(start), " seconds")
-
-	writeJson(findings, filename)
-
+		writeJson(findings, filename)
+	*/
 	// Delete the cloned repository
 	path, _ := os.Getwd()
 	fmt.Println(path)
 	if filepath.Base(path) == "Gitleaks" {
-		err = os.RemoveAll(".")
+		// We want to delete all the files and folders except the generated file with extension "_gitleaks.json"
+		// find . -name "*" ! -name "*_gitleaks.json" ! -name "." -exec rm -rf {} \;
+		//	err = os.RemoveAll(".")
+		//	if err != nil {
+		//		fmt.Println("Error fatal: ", err)
+		//	}
+		fmt.Print("    Removing cloning repository... ")
+
+		cmd := exec.Command("find . -name \"*\" ! -name \"*_gitleaks.json\" ! -name \".\" -exec rm -rf {} \\;")
+		cmd.Stdout = &out
+		cmd.Stderr = &stderr
+		err = cmd.Run()
 		if err != nil {
-			fmt.Println("Error fatal: ", err)
+			fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+			os.Exit(-1)
+		} else {
+			fmt.Println("Success")
+			// fmt.Printf("         Result:\n%8v\n", out.String())
 		}
 	}
 
