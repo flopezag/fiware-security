@@ -331,8 +331,6 @@ func initialize() {
 	// Change to the original directory
 	err = os.Chdir("..")
 	CheckIfError(err)
-
-	// os.Exit(0)
 }
 
 func clean() {

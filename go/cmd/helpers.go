@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -169,4 +170,29 @@ func writeJson(findings []report.Finding, filename string) error {
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", " ")
 	return encoder.Encode(findings)
+}
+
+func deleteClonedFolder() {
+	var files []string
+
+	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		res, _ := regexp.MatchString("_gitleaks.json", path)
+
+		if path != "." && !res {
+			files = append(files, path)
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	// We need to delete the *_gitleaks.json and . files for the list of files to delete
+
+	for _, file := range files {
+		err = os.RemoveAll(file)
+		if err != nil {
+			return
+		}
+	}
 }
