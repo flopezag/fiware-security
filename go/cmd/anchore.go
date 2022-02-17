@@ -7,11 +7,15 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func Anchore(enabler, filename string) {
 	var out bytes.Buffer
 	var stderr bytes.Buffer
+
+	start := time.Now()
+	fmt.Println("Starting at: ", start)
 
 	filename = filename + "_anchore.json"
 
@@ -91,6 +95,8 @@ func Anchore(enabler, filename string) {
 	// #     # We need to remove the last "," from the filename string(s)
 	// #     filename_anchore=${filename_anchore::-1}
 	// #
+
+	fmt.Println("scan completed in ", time.Since(start), " seconds")
 
 	// Return to the original folder
 	err = os.Chdir("..")

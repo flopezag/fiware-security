@@ -67,6 +67,8 @@ func Search(enabler, attribute string) []string {
 		result = enablers.Enablers[idx].Image
 	} else if attribute == "Repository" {
 		result = enablers.Enablers[idx].Repository
+	} else if attribute == "Compose" {
+		result = append(result, enablers.Enablers[idx].Compose)
 	} else {
 		fmt.Println("Attribute not found: " + attribute)
 		os.Exit(1)

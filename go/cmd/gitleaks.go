@@ -26,6 +26,9 @@ func Gitleaks(enabler_repository, filename string) {
 		err              error
 	)
 
+	start := time.Now()
+	fmt.Println("Starting at: ", start)
+
 	filename = filename + "_gitleaks.json"
 
 	fmt.Println("Audit git repository for secrets... ")
@@ -53,9 +56,6 @@ func Gitleaks(enabler_repository, filename string) {
 	if cfg.Path == "" {
 		cfg.Path = filepath.Join("../config", "gitleaks.toml")
 	}
-
-	start := time.Now()
-	fmt.Println(start)
 
 	files, err := gl.GitLog(".", "")
 	if err != nil {
@@ -85,8 +85,6 @@ func Gitleaks(enabler_repository, filename string) {
 		fmt.Println("no leaks found")
 	}
 
-	fmt.Println("scan completed in ", time.Since(start), " seconds")
-
 	writeJson(findings, filename)
 
 	// Delete the cloned repository
@@ -98,6 +96,8 @@ func Gitleaks(enabler_repository, filename string) {
 		deleteClonedFolder()
 		fmt.Println("Success")
 	}
+
+	fmt.Println("scan completed in ", time.Since(start), " seconds")
 
 	// Return to the original folder
 	err = os.Chdir("..")

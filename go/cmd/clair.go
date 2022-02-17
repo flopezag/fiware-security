@@ -7,11 +7,15 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func Clair(enabler, filename string) {
 	var out bytes.Buffer
 	var stderr bytes.Buffer
+
+	start := time.Now()
+	fmt.Println("Starting at: ", start)
 
 	filename = filename + "_clair.json"
 
@@ -72,6 +76,8 @@ func Clair(enabler, filename string) {
 	// #     filename_clair=${filename_clair::-1}
 	// # }
 	// #
+
+	fmt.Println("scan completed in ", time.Since(start), " seconds")
 
 	// Return to the original folder
 	err = os.Chdir("..")
