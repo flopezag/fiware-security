@@ -238,6 +238,9 @@ func initialize() {
 	// Localize docker-compose program
 	FindDockerCompose()
 
+	// Check mandatory programs for Docker_Bench_Security
+	check_mandatory_commands()
+
 	// We want to create the corresponding folders for Clair, Ancoher, amd Docker Bench Security
 	path, err := os.Getwd()
 	if err != nil {

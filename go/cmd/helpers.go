@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 	"time"
 
@@ -195,4 +196,29 @@ func deleteClonedFolder() {
 			return
 		}
 	}
+}
+
+func check_mandatory_commands() {
+	// Firstly: The scanner need to be executed in linux system, basically due to the Docker-Bench-Security
+	//        uses system commands calls
+	if runtime.GOOS == "windows" {
+		fmt.Println("Security Scan can't be executed on a windows machine")
+		os.Exit(-1)
+	}
+
+	// Secondly: There are several commands tools needed to be installed to be used by Docker-Bench-Security
+	fmt.Print("    Checking mandatory programs... ")
+
+	programs := [10]string{"awk", "docker", "grep", "stat", "tee", "tail", "wc", "xargs", "truncate", "sed"}
+
+	for i := 0; i < 10; i++ {
+		cmd := exec.Command("command", "-v", programs[i])
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Required program not found: ", programs[i])
+			os.Exit(-1)
+		}
+	}
+
+	fmt.Println("Success")
 }
