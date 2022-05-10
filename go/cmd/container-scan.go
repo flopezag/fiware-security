@@ -29,24 +29,6 @@ var absPathDockerCompose string // global variable to store absolute path of fil
 # export COMPOSE_HTTP_TIMEOUT=200
 #
 #
-# function redirect_stderr() {
-#     if [[ ${VERBOSE} -eq 1 ]]; then
-#         "$@"
-#     else
-#         "$@" 2>/dev/null
-#     fi
-# }
-#
-# function redirect_all() {
-#     if [[ ${VERBOSE} -eq 1 ]]; then
-#         "$@"
-#     else
-#         "$@" 2>/dev/null >/dev/null
-#     fi
-# }
-#
-#
-#
 # function email() {
 #   # This function receive 4 parameters
 #   # FIWARE GE name

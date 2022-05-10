@@ -6,7 +6,7 @@
                 "fiware/cygnus-ngsi"
             ],
             "repository": [
-
+                "https://github.com/telefonicaid/fiware-cygnus.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-cygnus.yml",
             "exclude": [
@@ -20,7 +20,7 @@
                 "ging/fiware-draco:latest"
             ],
             "repository": [
-
+                "https://github.com/ging/fiware-draco.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-draco.yml",
             "exclude": [],
@@ -32,7 +32,7 @@
                 "fiware/sigfox-iotagent:latest"
             ],
             "repository": [
-
+                "https://github.com/telefonicaid/sigfox-iotagent.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-sigfox.yml",
             "exclude": ["fiware/orion"],
@@ -44,7 +44,7 @@
                 "fiware/idm:latest"
             ],
             "repository": [
-
+                "https://github.com/ging/fiware-idm.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-keyrock.yml",
             "exclude": [
@@ -58,7 +58,7 @@
                 "fiware/orion:latest"
             ],
             "repository": [
-
+                "https://github.com/telefonicaid/fiware-orion.git"
             ],
             "compose": "https://raw.githubusercontent.com/telefonicaid/fiware-orion/master/docker/docker-compose.yml",
             "exclude": [],
@@ -82,7 +82,7 @@
                 "smartsdk/quantumleap:latest"
             ],
             "repository": [
-
+                "https://github.com/orchestracities/ngsi-timeseries-api.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-quantumleap.yml",
             "exclude": [],
@@ -98,7 +98,7 @@
                 "stellio/stellio-subscription-service:dev"
             ],
             "repository": [
-
+                "https://github.com/stellio-hub/stellio-context-broker.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
             "exclude": [
@@ -113,7 +113,7 @@
                 "fiware/pep-proxy:latest"
             ],
             "repository": [
-
+                "https://github.com/ging/fiware-pep-proxy.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-wilma.yml",
             "exclude": [
@@ -127,7 +127,7 @@
                 "fiware/wirecloud:latest"
             ],
             "repository": [
-
+                "https://github.com/Wirecloud/wirecloud.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-wirecloud.yml",
             "exclude": [

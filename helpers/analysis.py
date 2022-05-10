@@ -77,42 +77,41 @@ def open_file(file):
     return file_data
 
 
-def get_file(args):
+def get_local_file(args):
+    basename = args[1]
+    name = args[1].split('-')[0]
+
+    file_data = open_file(args[1])
+
+    return basename, name, file_data
+
+
+def get_files(args):
     """
     :param args:
     :return:
     """
-    if len(args) == 2:
-        basename = args[1]
-        name = args[1].split('-')[0]
+    # Get the list of last reports from the machine
+    # find /home/ubuntu/security-scan/anchore -iname "*.json" -mtime -20 -print  -> list of files to copy
+    c = Connection(
+        host="46.17.108.117",
+        user="ubuntu",
+        connect_kwargs={
+            "key_filename": "/Users/fernandolopez/Documents/workspace/security/fiware-security/deploy/ansible/keypair",
+        },
+    )
 
-        file_data = open_file(args[1])
+    result = c.run('find /home/ubuntu/security-scan/anchore -iname "*.json" -mtime -1 -print | sort')
 
-        return basename, name, file_data
-    elif len(args) == 1:
-        # Get the list of last reports from the machine
-        # find /home/ubuntu/security-scan/anchore -iname "*.json" -mtime -20 -print  -> list of files to copy
-        c = Connection(
-            host="46.17.108.117",
-            user="ubuntu",
-            connect_kwargs={
-                "key_filename": "/Users/fernandolopez/Documents/workspace/security/fiware-security/deploy/ansible/keypair",
-            },
-        )
+    files = result.stdout.split("\n")[:-1]
+    [c.get(file) for file in files]
 
-        result = c.run('find /home/ubuntu/security-scan/anchore -iname "*.json" -mtime -20 -print | sort')
+    basename = [Path(file).name for file in files]
+    name = [x.split('-')[0] for x in basename]
 
-        files = result.stdout.split("\n")[:-1]
-        [c.get(file) for file in files]
+    file_data = [open_file(x) for x in basename]
 
-        basename = [Path(file).name for file in files]
-        name = [x.split('-')[0] for x in basename]
-
-        file_data = [open_file(x) for x in basename]
-
-        return basename, name, file_data
-    else:
-        raise Exception("It is mandatory to introduce the report file to make the analysis")
+    return basename, name, file_data
 
 
 def analyse_data(basename, name, content):
@@ -135,11 +134,26 @@ def analyse_data(basename, name, content):
 
 
 if __name__ == '__main__':
-    basename, name, content = get_file(sys.argv)
+    parameters = len(sys.argv)
+
+    if parameters == 1:
+        # We want to analyse all components (getting remote files)
+        basename, name, content = get_files(sys.argv)
+    elif parameters == 2:
+        # We want to analyse only one component (already local file)
+        basename, name, content = get_local_file(sys.argv)
+    elif parameters >= 2:
+        # there is a list of images to be analysed and merged to have an overall view (already local files)
+
+
 
     if isinstance(basename, str):
         analyse_data(basename=basename, name=name, content=content)
     else:
         # There is a list of files to analyse
+
+        # If there is only 1 file we analyse that file
+        # if there is n files, we want to mix all the files in one to generate an overall analysis of a component
+        # (this is the case of Stellio with several images analysed
         for i in range(0, len(basename)):
             analyse_data(basename=basename[i], name=name[i], content=content[i])

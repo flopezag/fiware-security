@@ -47,17 +47,17 @@ var checkCmd = &cobra.Command{
 					fmt.Print("Success\n\n")
 				}
 
-				fmt.Println(out)
-				//Anchore(images[j], out)
-				//Clair(images[j], out)
+				// fmt.Println(out)
+				Anchore(images[j], out)
+				Clair(images[j], out)
 			}
 
 			var repositories []string = Search(ge, "Repository")
 			for j := 0; j < len(repositories); j++ {
 				out := FilenameFromUrl(ge, repositories[j])
-				fmt.Println(out)
+				// fmt.Println(out)
 
-				//Gitleaks(repositories[j], out)
+				Gitleaks(repositories[j], out)
 			}
 
 			var compose []string = Search(ge, "Compose")
