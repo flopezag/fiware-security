@@ -12,9 +12,9 @@
   <p align="center">
     <!--<a href="https://github.com/flopezag/fiware-security"><strong>Explore the docs »</strong></a>
     <br />
-    <br />-->
+    <br />
     <a href="https://github.com/flopezag/fiware-security">View Demo</a>
-    ·
+    ·-->
     <a href="https://github.com/flopezag/fiware-security/issues">Report Bug</a>
     ·
     <a href="https://github.com/flopezag/fiware-security/issues">Request Feature</a>
