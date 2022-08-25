@@ -29,15 +29,15 @@ var GmailService *gmail.Service
 
 func OAuthGmailService() {
 	config := oauth2.Config{
-		ClientID:     "854109831885-ivp2difm24nbfevo31584n45gare3fc0.apps.googleusercontent.com",
-		ClientSecret: "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",
+		ClientID:     "",
+		ClientSecret: "",
 		Endpoint:     google.Endpoint,
 		RedirectURL:  "http://localhost",
 	}
 
 	token := oauth2.Token{
-		AccessToken:  "ya29.A0AVA9y1vwkK_etW4E6IJvmwpT-5zpFQcmdaSaaTaENyWyjQ9abYxpFskuoXt-gLV1Z7aRcYcTmtaAZTVyXDtkpzwz1sTrH2FEH0I51SM5zIRmyPu9iSF2cZ2BhO5FiwxbV-Vp3nWsMuy-HmgHDuPVlvaXMXYaYUNnWUtBVEFTQVRBU0ZRRTY1ZHI4Q2g4TUFmZjZyX29nY2pXYmgtTHdwZw0163",
-		RefreshToken: "1//04RVNGK26pU0nCgYIARAAGAQSNwF-L9Ir8-XJPfWIv8Pia4-6OynYEP8uNM8VSkn4On81BL8AUVgJovkQnHxK_PWIdE1HGVsv9Rs",
+		AccessToken:  "",
+		RefreshToken: "",
 		TokenType:    "Bearer",
 		Expiry:       time.Now(),
 	}
