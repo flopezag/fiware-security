@@ -138,3 +138,9 @@ Clair/
 Gitleaks/
 Docker-Bench-Security/
 
+# Special configuration files
+Common/config/management.ini
+deploy/ansible/roles/security-scan/defaults/main.yml
+
+go/config/credentials.json
+go/config/tokens.json
