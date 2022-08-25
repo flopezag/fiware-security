@@ -1,5 +1,5 @@
 #!/bin/bash
-set -xv
+# set -xv
 
 user="{{ user }}"
 password="{{ password }}"
@@ -236,7 +236,7 @@ function init() {
     cd "$BASEDIR"
 
     if [[ ! -f "docker-compose.yml" ]]; then
-        wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/Common/cve_severity_scan.yml
+        wget -q https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/cve_severity_scan.yml
         mv cve_severity_scan.yml docker-compose.yml
     fi
 
@@ -270,7 +270,7 @@ function init() {
 
     # Need to check that the file exist
     if [[ ! -f "enablers.json" ]]; then
-        wget -q https://raw.githubusercontent.com/flopezag/fiware-clair/develop/Common/enablers.json
+        wget -q https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/enablers.json
         cp enablers.json ./docker-bench-security/enablers.json
         cp enablers.json ./anchore/enablers.json
     fi
@@ -326,11 +326,7 @@ function email() {
 
   echo "$MESSAGE" > /tmp/tmpfile.$$
 
-  email_command="mail
-                 -s \"$SUBJECT\"
-                 -A $bench_file"
-
-  email_command="mail
+  email_command="/home/ubuntu/security-scan/common/mail
                     -s \"$SUBJECT\"
                     -t $email_owner
                     -b /tmp/tmpfile.$$
