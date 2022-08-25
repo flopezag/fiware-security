@@ -73,13 +73,13 @@
 
 - name: Download config_logging.py
   get_url:
-    url: https://raw.githubusercontent.com/flopezag/fiware-clair/develop/Common/config/config_logging.py
+    url: https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/config/config_logging.py
     dest: /home/ubuntu/security-scan/common/config/config_logging.py
     mode: '0440'
 
 - name: Download settings.py
   get_url:
-    url: https://raw.githubusercontent.com/flopezag/fiware-clair/develop/Common/config/settings.py
+    url: https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/config/settings.py
     dest: /home/ubuntu/security-scan/common/config/settings.py
     mode: '0440'
 
@@ -91,6 +91,6 @@
 
 - name: Download mail script
   get_url:
-    url: https://raw.githubusercontent.com/flopezag/fiware-clair/develop/Common/mail
+    url: https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/mail
     dest: /home/ubuntu/security-scan/common/mail
     mode: '0740'
