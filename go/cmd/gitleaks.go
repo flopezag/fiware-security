@@ -11,7 +11,7 @@ import (
 
 	"github.com/zricethezav/gitleaks/v8/config"
 	"github.com/zricethezav/gitleaks/v8/detect"
-	gl "github.com/zricethezav/gitleaks/v8/git"
+	gl "github.com/zricethezav/gitleaks/v8/detect/git"
 	"github.com/zricethezav/gitleaks/v8/report"
 
 	git "github.com/go-git/go-git/v5"
@@ -19,11 +19,13 @@ import (
 
 func Gitleaks(enabler_repository, filename string) {
 	var (
-		vc               config.ViperConfig
-		findingsFromGit  []report.Finding
-		findingsFromFile []report.Finding
-		findings         []report.Finding
-		err              error
+		vc       config.ViperConfig
+		findings []report.Finding
+		err      error
+
+		//findingsFromGit  []report.Finding
+		//findingsFromFile []report.Finding
+		//findings         []report.Finding
 	)
 
 	start := time.Now()
@@ -56,52 +58,107 @@ func Gitleaks(enabler_repository, filename string) {
 	if cfg.Path == "" {
 		cfg.Path = filepath.Join("../config", "gitleaks.toml")
 	}
-
+	// TODO: Git log is executed twice, once here to see if it is valid and second in the scan analysis
 	files, err := gl.GitLog(".", "")
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Failed to get git log")
 		return
 	}
+
 	fmt.Println(files)
 
-	options := detect.Options{Verbose: false, Redact: false}
+	// Setup detector
+	detector := detect.NewDetector(cfg)
 
-	findingsFromGit = detect.FromGit(files, cfg, options)
+	if detector.Config.Path == "" {
+		detector.Config.Path = filepath.Join("../config", ".gitleaks.toml")
+	}
 
-	findingsFromFile, err = detect.FromFiles(".", cfg, options)
+	detector.Verbose = false
+	detector.Redact = false
+	var source string = "."
+	var logOpts string = ""
+
+	if fileExists(filepath.Join(source, ".gitleaksignore")) {
+		detector.AddGitleaksIgnore(filepath.Join(source, ".gitleaksignore"))
+	}
+
+	findings, err = detector.DetectGit(source, logOpts, detect.DetectType)
 	if err != nil {
-		fmt.Println("Failed to scan files")
+		// don't exit on error, just log it
+		// log.Error().Msg(err.Error())
+		Error(err.Error())
 	}
 
-	findings = findingsFromGit
-	for j := 0; j < len(findingsFromFile); j++ {
-		findings = append(findings, findingsFromFile[j])
-	}
-
-	if len(findings) != 0 {
-		fmt.Println("leaks found in Git: ", len(findings))
+	// log info about the scan
+	if err == nil {
+		Info("scan completed in %s", time.Since(start))
+		if len(findings) != 0 {
+			Warning("leaks found: %d", len(findings))
+		} else {
+			Info("no leaks found")
+		}
 	} else {
-		fmt.Println("no leaks found")
+		Warning("partial scan completed in %s", time.Since(start))
+		if len(findings) != 0 {
+			Warning("%d leaks found in partial scan", len(findings))
+		} else {
+			Warning("no leaks found in partial scan")
+		}
 	}
 
 	writeJson(findings, filename)
 
-	// Delete the cloned repository
-	path, _ := os.Getwd()
-	fmt.Println(path)
-	if filepath.Base(path) == "Gitleaks" {
-		// We want to delete all the files and folders except the generated file with extension "_gitleaks.json"
-		fmt.Print("    Removing cloning repository... ")
-		deleteClonedFolder()
-		fmt.Println("Success")
-	}
+	/*
 
-	fmt.Println("scan completed in ", time.Since(start), " seconds")
+		findings, err = detector.DetectGit(source, logOpts, detect.DetectType)
+		if err != nil {
+			// don't exit on error, just log it
+			log.Error().Err(err)
+		}
 
-	// Return to the original folder
-	err = os.Chdir("..")
-	CheckIfError(err)
+		findings, err = detector.DetectFiles(source)
+
+
+			options := detect.Options{Verbose: false, Redact: false}
+
+			findingsFromGit = detect.FromGit(files, cfg, options)
+
+			findingsFromFile, err = detect.FromFiles(".", cfg, options)
+			if err != nil {
+				fmt.Println("Failed to scan files")
+			}
+
+			findings = findingsFromGit
+			for j := 0; j < len(findingsFromFile); j++ {
+				findings = append(findings, findingsFromFile[j])
+			}
+
+			if len(findings) != 0 {
+				fmt.Println("leaks found in Git: ", len(findings))
+			} else {
+				fmt.Println("no leaks found")
+			}
+
+			writeJson(findings, filename)
+
+			// Delete the cloned repository
+			path, _ := os.Getwd()
+			fmt.Println(path)
+			if filepath.Base(path) == "Gitleaks" {
+				// We want to delete all the files and folders except the generated file with extension "_gitleaks.json"
+				fmt.Print("    Removing cloning repository... ")
+				deleteClonedFolder()
+				fmt.Println("Success")
+			}
+
+			fmt.Println("scan completed in ", time.Since(start), " seconds")
+
+			// Return to the original folder
+			err = os.Chdir("..")
+			CheckIfError(err)
+	*/
 }
 
 func InitRules() {

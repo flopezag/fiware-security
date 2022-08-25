@@ -54,6 +54,10 @@ func Warning(format string, args ...interface{}) {
 	fmt.Printf("\x1b[36;1m%s\x1b[0m\n", fmt.Sprintf(format, args...))
 }
 
+func Error(format string, args ...interface{}) {
+	fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf(format, args...))
+}
+
 // DownloadFile will download a url and store it in local filepath.
 // It writes to the destination file as it downloads it, without
 // loading the entire file into memory.
@@ -221,4 +225,19 @@ func check_mandatory_commands() {
 	}
 
 	fmt.Println("Success")
+}
+
+func fileExists(fileName string) bool {
+	// check if a file exist, it can return false if it is not exist or it is a directory
+	info, err := os.Stat(fileName)
+	if err != nil && !os.IsNotExist(err) {
+		return false
+	}
+
+	if info != nil && err == nil {
+		if !info.IsDir() {
+			return true
+		}
+	}
+	return false
 }

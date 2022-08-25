@@ -144,8 +144,8 @@ if __name__ == '__main__':
         basename, name, content = get_local_file(sys.argv)
     elif parameters >= 2:
         # there is a list of images to be analysed and merged to have an overall view (already local files)
-
-
+        print("Number of parameters wrong, it is only needed 2 or 3")
+        exit(1)
 
     if isinstance(basename, str):
         analyse_data(basename=basename, name=name, content=content)
