@@ -108,3 +108,33 @@ venv.bak/
 
 # IDE
 .idea
+.vscode
+go/.vscode
+
+# Execution results
+./results/*.json
+
+# Tempodal execution terraform files
+deploy/terraform/terraform.tfvars
+deploy/terraform/tf_keypair_sec_scan
+deploy/terraform/.terraform
+deploy/terraform/terraform.tfstate
+deploy/terraform/terraform.tfstate.backup
+
+# Temporal execution ansible files
+deploy/ansible/inventory.ini
+deploy/ansible/keypair
+
+# Temporal local security scan executions
+results
+
+# Data analysis of security reports temporal files
+helpers/*.json
+helpers/*.png
+
+# Temporal folders to execute the scanning process
+Anchore/
+Clair/
+Gitleaks/
+Docker-Bench-Security/
+
