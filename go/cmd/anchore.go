@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func Anchore(enabler, filename string) {
+func Anchore(enabler, filename string) string {
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 
@@ -101,4 +101,6 @@ func Anchore(enabler, filename string) {
 	// Return to the original folder
 	err = os.Chdir("..")
 	CheckIfError(err)
+
+	return filename
 }

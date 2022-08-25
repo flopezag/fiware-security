@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func Docker_bench_security(compose, filename string) {
+func Docker_bench_security(compose, filename string) string {
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 
@@ -101,4 +101,6 @@ func Docker_bench_security(compose, filename string) {
 
 	err = os.Chdir("..")
 	CheckIfError(err)
+
+	return filename
 }

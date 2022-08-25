@@ -1,13 +1,14 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
+	"security/scan/gomail"
 
 	"github.com/spf13/cobra"
 )
@@ -21,6 +22,8 @@ var checkCmd = &cobra.Command{
 	Enabler is specified, the analysis will be developed only on this component.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
+		var files []string
+
 		initialize()
 
 		if len(args) == 0 {
@@ -47,22 +50,33 @@ var checkCmd = &cobra.Command{
 					fmt.Print("Success\n\n")
 				}
 
-				// fmt.Println(out)
-				Anchore(images[j], out)
-				Clair(images[j], out)
+				fmt.Println(out)
+
+				// Step 1: Anchore and Clair scan image
+				out = Anchore(images[j], out)
+				files = append(files, out)
+
+				out = Clair(images[j], out)
+				files = append(files, out)
 			}
 
 			var repositories []string = Search(ge, "Repository")
 			for j := 0; j < len(repositories); j++ {
 				out := FilenameFromUrl(ge, repositories[j])
-				// fmt.Println(out)
+				fmt.Println(out)
 
-				Gitleaks(repositories[j], out)
+				out = Gitleaks(repositories[j], out)
+				files = append(files, out)
 			}
 
 			var compose []string = Search(ge, "Compose")
 			out := FilenameFromUrl(ge, compose[0])
-			Docker_bench_security(compose[0], out)
+			fmt.Println(out)
+			out = Docker_bench_security(compose[0], out)
+			files = append(files, out)
+
+			// Send the files by email
+			SendMail(files)
 		}
 
 		clean()
@@ -81,4 +95,44 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// checkCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func SendMail(files []string) {
+	data := gomail.Data{
+		ComponentName: "",
+		Subject:       "[Security Analysis] Analysis of docker image: ",
+		Body:          "",
+		EmailTo:       "",
+	}
+
+	data.EmailTo = ""
+	data.ComponentName = ""
+	data.Subject = data.Subject + data.ComponentName
+
+	body, err := gomail.GenerateBody(data)
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+	} else {
+		data.Body = body
+	}
+
+	gomail.OAuthGmailService()
+
+	status, err := gomail.SendEmailOAuth2(data)
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+	}
+
+	if status {
+		log.Println("Email sent successfully using OAUTH")
+	}
+
+	status, err = gomail.SendEmailOAuth2WithAttachment(data, files)
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+	}
+
+	if status {
+		log.Println("Email with attachments sent successfully using OAUTH")
+	}
 }

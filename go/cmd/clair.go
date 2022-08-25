@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func Clair(enabler, filename string) {
+func Clair(enabler, filename string) string {
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 
@@ -82,4 +82,6 @@ func Clair(enabler, filename string) {
 	// Return to the original folder
 	err = os.Chdir("..")
 	CheckIfError(err)
+
+	return filename
 }
