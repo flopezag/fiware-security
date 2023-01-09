@@ -101,27 +101,28 @@ func Copy_file(src string, dest string) {
 }
 
 func CheckDockerCompose() string {
-	path, err := exec.LookPath("docker-compose")
+	path, err := exec.LookPath("docker")
 
 	if err != nil {
-		fmt.Printf("didn't find 'docker-compose' executable\n")
+		fmt.Printf("didn't find 'docker' executable, need to execute docker compose\n")
 		os.Exit(-1)
 	} else {
-		fmt.Printf("'docker-compose' executable is in '%s'\n", path)
+		fmt.Printf("'docker' executable is in '%s'\n", path)
 	}
 
+	path = path + " compose"
 	return path
 }
 
 func FindDockerCompose() {
-	path, err := exec.LookPath("docker-compose")
+	path, err := exec.LookPath("docker")
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal("We cannot find the 'docker-compose' in the PATH variable.\n" +
-			"It is needed to have installed and configured Docker Compose to run this security scan analysis")
+		log.Fatal("We cannot find the 'docker' in the PATH variable.\n" +
+			"It is needed to have installed and configured Docker in order to execute docker compose to run this security scan analysis")
 	}
 
-	absPathDockerCompose = path
+	path = path + " compose"
 }
 
 // Generate the filename corresponding to the image
@@ -216,7 +217,7 @@ func check_mandatory_commands() {
 	programs := [10]string{"awk", "docker", "grep", "stat", "tee", "tail", "wc", "xargs", "truncate", "sed"}
 
 	for i := 0; i < 10; i++ {
-		cmd := exec.Command("command", "-v", programs[i])
+		cmd := exec.Command("bash", "-c", "command", "-v", programs[i])
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Required program not found: ", programs[i])
