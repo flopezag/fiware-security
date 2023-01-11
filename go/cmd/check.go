@@ -56,8 +56,8 @@ var checkCmd = &cobra.Command{
 				out = Anchore(images[j], out)
 				files = append(files, out)
 
-				out = Clair(images[j], out)
-				files = append(files, out)
+				//out = Clair(images[j], out)
+				//files = append(files, out)
 			}
 
 			var repositories []string = Search(ge, "Repository")
@@ -69,14 +69,14 @@ var checkCmd = &cobra.Command{
 				files = append(files, out)
 			}
 
-			var compose []string = Search(ge, "Compose")
-			out := FilenameFromUrl(ge, compose[0])
-			fmt.Println(out)
-			out = Docker_bench_security(compose[0], out)
-			files = append(files, out)
+			//			var compose []string = Search(ge, "Compose")
+			//			out := FilenameFromUrl(ge, compose[0])
+			//			fmt.Println(out)
+			//			out = Docker_bench_security(compose[0], out)
+			//			files = append(files, out)
 
 			// Send the files by email
-			SendMail(files)
+			//			SendMail(files)
 		}
 
 		clean()

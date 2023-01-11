@@ -122,7 +122,7 @@ func FindDockerCompose() {
 			"It is needed to have installed and configured Docker in order to execute docker compose to run this security scan analysis")
 	}
 
-	path = path + " compose"
+	absPathDockerCompose = path //+ " compose"
 }
 
 // Generate the filename corresponding to the image
@@ -225,7 +225,7 @@ func check_mandatory_commands() {
 		}
 	}
 
-	fmt.Println("Success")
+	fmt.Print("Success\n\n")
 }
 
 func fileExists(fileName string) bool {

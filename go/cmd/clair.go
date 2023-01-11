@@ -29,7 +29,8 @@ func Clair(enabler, filename string) string {
 
 	// Step 1:
 	fmt.Print("    Security analysis of " + enabler + " image...")
-	cmd := exec.Command(absPathDockerCompose, "run", "--rm", "scanner", enabler)
+	// TODO:     Security analysis of fiware/orion-ld:latest image...exit status 1: Creating network "clair_default" with the default driver
+	cmd := exec.Command(absPathDockerCompose, "compose", "run", "--rm", "scanner", enabler)
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()

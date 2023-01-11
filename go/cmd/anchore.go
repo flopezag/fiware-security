@@ -30,7 +30,7 @@ func Anchore(enabler, filename string) string {
 	// Step 1: Add the FIWARE Enabler to be analysed
 	// docker-compose -f docker-compose-anchore.yaml exec api anchore-cli image add $enabler
 	fmt.Print("    Adding the FIWARE Enabler to be analysed... ")
-	cmd := exec.Command(absPathDockerCompose, "-f", "docker-compose-anchore.yaml", "exec", "-T", "api", "anchore-cli", "image", "add", enabler)
+	cmd := exec.Command(absPathDockerCompose, "compose", "-f", "docker-compose-anchore.yaml", "exec", "-T", "api", "anchore-cli", "image", "add", enabler)
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()
@@ -47,7 +47,7 @@ func Anchore(enabler, filename string) string {
 	fmt.Print("    Waiting until the analysis is finished... ")
 	out.Reset()
 	stderr.Reset()
-	cmd = exec.Command(absPathDockerCompose, "-f", "docker-compose-anchore.yaml", "exec", "-T", "api", "anchore-cli", "image", "wait", enabler)
+	cmd = exec.Command(absPathDockerCompose, "compose", "-f", "docker-compose-anchore.yaml", "exec", "-T", "api", "anchore-cli", "image", "wait", enabler)
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()
@@ -65,7 +65,7 @@ func Anchore(enabler, filename string) string {
 	fmt.Print("    Getting the list of vulnerabilities... ")
 	out.Reset()
 	stderr.Reset()
-	cmd = exec.Command(absPathDockerCompose, "-f", "docker-compose-anchore.yaml", "exec", "-T", "api", "anchore-cli", "--json", "image", "vuln", enabler, "all")
+	cmd = exec.Command(absPathDockerCompose, "compose", "-f", "docker-compose-anchore.yaml", "exec", "-T", "api", "anchore-cli", "--json", "image", "vuln", enabler, "all")
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()

@@ -243,7 +243,7 @@ func initialize() {
 
 	// Pull the Clair content
 	fmt.Print("Pulling Clair content... ")
-	cmd := exec.Command(absPathDockerCompose, "pull")
+	cmd := exec.Command(absPathDockerCompose, "compose", "pull")
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()
@@ -251,7 +251,7 @@ func initialize() {
 		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
 		os.Exit(-1)
 	} else {
-		fmt.Println("Success")
+		fmt.Print("Success\n")
 		// fmt.Printf("         Result:\n%8v\n", out.String())
 	}
 
@@ -265,14 +265,14 @@ func initialize() {
 	Copy_file("enablers.json", "./Clair/enablers.json")
 
 	// Clone the given repository to the given directory
-	Info("\ngit clone https://github.com/docker/docker-bench-security.git")
+	Info("    git clone https://github.com/docker/docker-bench-security.git")
 
 	_, err = git.PlainClone(path+"/Docker-Bench-Security", false, &git.CloneOptions{
 		URL:      "https://github.com/docker/docker-bench-security.git",
 		Progress: os.Stdout,
 	})
 
-	Info("%s\n", err)
+	Info("    %s\n", err)
 
 	// Copy enablers.json to the Docker-Bench-Security folder and delete the file in the .. folder
 	Copy_file("enablers.json", "./Docker-Bench-Security/enablers.json")
@@ -289,19 +289,19 @@ func initialize() {
 	// Start Anchore engine
 	// #     redirect_all docker-compose -f docker-compose-anchore.yaml up -d
 	fmt.Print("Starting Anchore engine... ")
-	err = exec.Command(absPathDockerCompose, "-f", "docker-compose-anchore.yaml", "up", "-d").Run()
+	err = exec.Command(absPathDockerCompose, "compose", "-f", "docker-compose-anchore.yaml", "up", "-d").Run()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(-1)
 	} else {
-		fmt.Println("Success")
+		fmt.Print("Success\n\n")
 	}
 
 	// Verify service availability
 
 	// Wait until the vulnarabilities dictionary is download
 	fmt.Print("Waiting vulnerability dictionary downloads... ")
-	err = exec.Command(absPathDockerCompose, "-f docker-compose-anchore.yaml exec api anchore-cli system wait").Run()
+	err = exec.Command(absPathDockerCompose, "compose", "-f docker-compose-anchore.yaml exec api anchore-cli system wait").Run()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(-1)
@@ -325,7 +325,7 @@ func clean() {
 	err := os.Chdir("Anchore")
 	CheckIfError(err)
 
-	exec.Command(absPathDockerCompose, "-f docker-compose-anchore.yaml down")
+	exec.Command(absPathDockerCompose, "compose", "-f docker-compose-anchore.yaml down")
 
 	fmt.Println()
 
@@ -334,7 +334,7 @@ func clean() {
 	// CheckIfError(err)
 
 	fmt.Println("Clean up the Docker-Bench-Security docker-compose engine...")
-	// exec.Command(absPathDockerCompose, "down")
+	// exec.Command(absPathDockerCompose, "compose", "down")
 	fmt.Println()
 
 	// Stop/down the Clair engine
@@ -342,7 +342,7 @@ func clean() {
 	// CheckIfError(err)
 
 	fmt.Println("Clean up the Clair docker-compose engine...")
-	// exec.Command(absPathDockerCompose, "down")
+	// exec.Command(absPathDockerCompose, "compose", "down")
 	fmt.Println()
 
 	// Going back to the original folder
