@@ -87,7 +87,7 @@ func ParseJSON() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Successfully Opened enablers.json")
+	fmt.Println("    Successfully Opened enablers.json")
 
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()

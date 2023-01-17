@@ -15,7 +15,7 @@ func Anchore(enabler, filename string) string {
 	var stderr bytes.Buffer
 
 	start := time.Now()
-	fmt.Println("Starting at: ", start)
+	fmt.Print("\nStarting at: \n\n", start)
 
 	filename = filename + "_anchore.json"
 

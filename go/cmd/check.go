@@ -41,7 +41,7 @@ var checkCmd = &cobra.Command{
 				out := Filename(ge, images[j])
 
 				// Step 0: Pull the docker image
-				fmt.Print("\nPulling image... ")
+				fmt.Print("    Pulling image... ")
 				err := exec.Command("docker", "pull", images[j]).Run()
 				if err != nil {
 					fmt.Println(err.Error())
@@ -50,7 +50,7 @@ var checkCmd = &cobra.Command{
 					fmt.Print("Success\n\n")
 				}
 
-				fmt.Println(out)
+				fmt.Println("    Filename of results" + out)
 
 				// Step 1: Anchore and Clair scan image
 				out = Anchore(images[j], out)
