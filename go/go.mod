@@ -3,7 +3,7 @@ module security/scan
 go 1.19
 
 require (
-	github.com/docker/docker v20.10.17+incompatible
+	github.com/docker/docker v20.10.24+incompatible
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
