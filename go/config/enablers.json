@@ -93,19 +93,17 @@
         {
             "name": "Stellio",
             "image": [
-                "stellio/stellio-timescale-postgis:1.7.2-pg11",
-                "stellio/stellio-api-gateway:dev",
-                "stellio/stellio-entity-service:dev",
-                "stellio/stellio-search-service:dev",
-                "stellio/stellio-subscription-service:dev"
+                "stellio/stellio-api-gateway:latest-dev",
+                "stellio/stellio-search-service:latest-dev",
+                "stellio/stellio-subscription-service:latest-dev"
             ],
             "repository": [
                 "https://github.com/stellio-hub/stellio-context-broker.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
             "exclude": [
-                "confluentinc/cp-zookeeper",
-                "confluentinc/cp-kafka,neo4j"
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
             ],
             "email": "benoit.orihuela@egm.io"
         },
