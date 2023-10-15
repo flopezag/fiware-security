@@ -93,18 +93,17 @@
         {
             "name": "Stellio",
             "image": [
-                "stellio/stellio-timescale-postgis@sha256:b80d5a8924f357f6810208c32aa11b6e62484f42aecd70c99e5ebcc3bf9b6b6b",
-                "stellio/stellio-api-gateway:2.8.0",
-                "stellio/stellio-search-service:2.8.0",
-                "stellio/stellio-subscription-service:2.8.0"
+                "stellio/stellio-api-gateway:latest-dev",
+                "stellio/stellio-search-service:latest-dev",
+                "stellio/stellio-subscription-service:latest-dev"
             ],
             "repository": [
                 "https://github.com/stellio-hub/stellio-context-broker.git"
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
             "exclude": [
-                "confluentinc/cp-zookeeper",
-                "confluentinc/cp-kafka,neo4j"
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
             ],
             "email": "fernando.lopez@fiware.org"
         },
