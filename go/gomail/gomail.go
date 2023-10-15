@@ -77,7 +77,7 @@ func SendEmailOAuth2(data Data) (bool, error) {
 func GenerateBody(data Data) (string, error) {
 	body, err := parseBodyTemplate("template.jinja", data)
 	if err != nil {
-		return "", errors.New("Unable to parse email template")
+		return "", errors.New("unable to parse email template")
 	}
 
 	return body, nil
