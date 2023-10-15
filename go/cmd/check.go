@@ -52,22 +52,23 @@ var checkCmd = &cobra.Command{
 
 				fmt.Println("    Filename of results" + out)
 
-				// Step 1: Anchore and Clair scan image
+				// Step 1: Anchore and Clair scan image, anchore is failing now Analysis Status: analysis_failed for Orion-LD
 				out = Anchore(images[j], out)
 				files = append(files, out)
 
-				//out = Clair(images[j], out)
-				//files = append(files, out)
+				// Clair is also failing,     Security analysis of fiware/orion:latest image...exit status 1: Container clair-db-1  Running
+				// out = Clair(images[j], out)
+				// files = append(files, out)
 			}
 
-			var repositories []string = Search(ge, "Repository")
-			for j := 0; j < len(repositories); j++ {
-				out := FilenameFromUrl(ge, repositories[j])
-				fmt.Println(out)
-
-				out = Gitleaks(repositories[j], out)
-				files = append(files, out)
-			}
+			// var repositories []string = Search(ge, "Repository")
+			// for j := 0; j < len(repositories); j++ {
+			// 	out := FilenameFromUrl(ge, repositories[j])
+			//	fmt.Println(out)
+			//
+			//	out = Gitleaks(repositories[j], out)
+			//	files = append(files, out)
+			//}
 
 			//			var compose []string = Search(ge, "Compose")
 			//			out := FilenameFromUrl(ge, compose[0])
@@ -76,7 +77,7 @@ var checkCmd = &cobra.Command{
 			//			files = append(files, out)
 
 			// Send the files by email
-			//			SendMail(files)
+			SendMail(files)
 		}
 
 		clean()
@@ -118,16 +119,7 @@ func SendMail(files []string) {
 
 	gomail.OAuthGmailService()
 
-	status, err := gomail.SendEmailOAuth2(data)
-	if err != nil {
-		log.Fatalf("Error: %v", err)
-	}
-
-	if status {
-		log.Println("Email sent successfully using OAUTH")
-	}
-
-	status, err = gomail.SendEmailOAuth2WithAttachment(data, files)
+	status, err := gomail.SendEmailOAuth2WithAttachment(data, files)
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}

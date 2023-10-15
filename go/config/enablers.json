@@ -12,7 +12,7 @@
             "exclude": [
                 "mongo"
             ],
-            "email": "telefonica.fiware@gmail.com"
+            "email": "fernando.lopez@fiware.org"
         },
         {
             "name": "Draco",
@@ -24,7 +24,7 @@
             ],
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-draco.yml",
             "exclude": [],
-            "email": "joseandres.munoz@upm.es"
+            "email": "fernando.lopez@fiware.org"
         },
         {
             "name": "IoTAgent-SigFox",
@@ -52,7 +52,7 @@
             "exclude": [
                 "mysql:5.7"
             ],
-            "email": "alvaro.alonso@upm.es"
+            "email": "fernando.lopez@fiware.org"
         },
         {
             "name": "Orion",
@@ -64,7 +64,7 @@
             ],
             "compose": "https://raw.githubusercontent.com/telefonicaid/fiware-orion/master/docker/docker-compose.yml",
             "exclude": [],
-            "email": "telefonica.fiware@gmail.com"
+            "email": "fernando.lopez@fiware.org"
         },
         {
             "name": "Orion-LD",
@@ -76,7 +76,7 @@
             ],
             "compose": "https://raw.githubusercontent.com/FIWARE/context.Orion-LD/develop/docker/docker-compose.yml",
             "exclude": [],
-            "email": "ken.zangelin@fiware.org"
+            "email": "fernando.lopez@fiware.org"
         },
         {
             "name": "QuantumLeap",
@@ -93,11 +93,10 @@
         {
             "name": "Stellio",
             "image": [
-                "stellio/stellio-timescale-postgis:1.7.2-pg11",
-                "stellio/stellio-api-gateway:dev",
-                "stellio/stellio-entity-service:dev",
-                "stellio/stellio-search-service:dev",
-                "stellio/stellio-subscription-service:dev"
+                "stellio/stellio-timescale-postgis@sha256:b80d5a8924f357f6810208c32aa11b6e62484f42aecd70c99e5ebcc3bf9b6b6b",
+                "stellio/stellio-api-gateway:2.8.0",
+                "stellio/stellio-search-service:2.8.0",
+                "stellio/stellio-subscription-service:2.8.0"
             ],
             "repository": [
                 "https://github.com/stellio-hub/stellio-context-broker.git"
@@ -107,7 +106,23 @@
                 "confluentinc/cp-zookeeper",
                 "confluentinc/cp-kafka,neo4j"
             ],
-            "email": "benoit.orihuela@egm.io"
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Scorpio",
+            "image": [
+                "scorpiobroker/all-in-one-runner:java-kafka-4.1.8"
+            ],
+            "repository": [
+                "https://github.com/ScorpioBroker/ScorpioBroker.git"
+            ],
+            "compose": "",
+            "exclude": [
+                "zookeeper",
+                "bitnami/kafka",
+                "postgis/postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
         },
         {
             "name": "Wilma",
@@ -121,7 +136,7 @@
             "exclude": [
                 "fiware/idm:latest,mysql:5.7"
             ],
-            "email": "alvaro.alonso@upm.es"
+            "email": "fernando.lopez@fiware.org"
         },
         {
             "name": "Wirecloud",

@@ -12,7 +12,10 @@ import (
 	"os/exec"
 
 	"github.com/docker/docker/api/types"
+	containertypes "github.com/docker/docker/api/types/container"
+
 	"github.com/docker/docker/client"
+	
 	"github.com/go-git/go-git/v5"
 	//"github.com/google/go-github/github"
 )
@@ -299,7 +302,7 @@ func initialize() {
 
 	// Verify service availability
 
-	// Wait until the vulnarabilities dictionary is download
+	// Wait until the vulnerabilities dictionary is download
 	fmt.Print("Waiting vulnerability dictionary downloads... ")
 	err = exec.Command(absPathDockerCompose, "compose", "-f docker-compose-anchore.yaml exec api anchore-cli system wait").Run()
 	if err != nil {
@@ -363,7 +366,8 @@ func clean() {
 
 	for _, container := range containers {
 		fmt.Print("        Stopping container ", container.ID[:10], "... ")
-		if err := cli.ContainerStop(ctx, container.ID, nil); err != nil {
+		stopTimeout := 3
+		if err := cli.ContainerStop(ctx, container.ID, containertypes.StopOptions{Timeout: &stopTimeout}); err != nil {
 			panic(err)
 		}
 		fmt.Println("Success")

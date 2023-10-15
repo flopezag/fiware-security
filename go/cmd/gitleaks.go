@@ -58,7 +58,7 @@ func Gitleaks(enabler_repository, filename string) string {
 		cfg.Path = filepath.Join("../config", "gitleaks.toml")
 	}
 	// TODO: Git log is executed twice, once here to see if it is valid and second in the scan analysis
-	files, err := gl.GitLog(".", "")
+	files, err := gl.NewGitLogCmd(".", "")
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Failed to get git log")

@@ -11,7 +11,7 @@ import (
 func parseBodyTemplate(templateFileName string, data Data) (string, error) {
 	templatePath, err := filepath.Abs(fmt.Sprintf("config/%s", templateFileName))
 	if err != nil {
-		return "", errors.New("invalid template name")
+		return "", errors.New("Invalid template name")
 	}
 
 	t, err := template.ParseFiles(templatePath)

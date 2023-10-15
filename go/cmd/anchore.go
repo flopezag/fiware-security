@@ -60,7 +60,7 @@ func Anchore(enabler, filename string) string {
 	}
 
 	// Step 3: Get the list of vulnerabilities
-	// docker-compose -f docker-compose-anchore.yaml exec -T api anchore-cli --json image vuln $enabler all
+	// docker compose -f docker-compose-anchore.yaml exec -T api anchore-cli --json image vuln $enabler all
 
 	fmt.Print("    Getting the list of vulnerabilities... ")
 	out.Reset()

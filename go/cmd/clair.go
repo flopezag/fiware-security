@@ -15,7 +15,7 @@ func Clair(enabler, filename string) string {
 	var stderr bytes.Buffer
 
 	start := time.Now()
-	fmt.Println("Starting at: ", start)
+	fmt.Println("\nStarting at: ", start)
 
 	filename = filename + "_clair.json"
 
