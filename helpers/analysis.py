@@ -134,6 +134,7 @@ def analyse_data(basename, name, content):
 
 
 if __name__ == '__main__':
+    # TODO: Modify the code to search the generated Anchore files to prevent copy the files
     parameters = len(sys.argv)
 
     if parameters == 1:

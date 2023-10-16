@@ -144,3 +144,6 @@ deploy/ansible/roles/security-scan/defaults/main.yml
 
 go/config/credentials.json
 go/config/tokens.json
+
+# Generated go executed programm
+go/scan
