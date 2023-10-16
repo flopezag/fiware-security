@@ -3,11 +3,8 @@ package cmd
 import (
 	"bytes"
 	"context"
-	// "encoding/json"
 	"fmt"
-	// "io/ioutil"
 	"log"
-	// "net/http"
 	"os"
 	"os/exec"
 

@@ -3,7 +3,6 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -77,7 +76,7 @@ func Anchore(enabler, filename string) string {
 		fmt.Printf("         Result:\n%8v\n", out.String())
 
 		// Step 4: Save the out into filename
-		err = ioutil.WriteFile(filename, out.Bytes(), 0644)
+		err = os.WriteFile(filename, out.Bytes(), 0644)
 
 		if err != nil {
 			log.Fatal(err)

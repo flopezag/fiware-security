@@ -3,7 +3,6 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -50,7 +49,7 @@ func Clair(enabler, filename string) string {
 		}
 
 		// Step 3: Save the out into filename
-		err = ioutil.WriteFile(filename, result, 0644)
+		err = os.WriteFile(filename, result, 0644)
 
 		if err != nil {
 			log.Fatal(err)

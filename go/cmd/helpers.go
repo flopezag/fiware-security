@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -86,13 +85,13 @@ func DownloadFile(url string, filepath string) error {
 }
 
 func Copy_file(src string, dest string) {
-	bytesRead, err := ioutil.ReadFile(src)
+	bytesRead, err := os.ReadFile(src)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = ioutil.WriteFile(dest, bytesRead, 0644)
+	err = os.WriteFile(dest, bytesRead, 0644)
 
 	if err != nil {
 		log.Fatal(err)
