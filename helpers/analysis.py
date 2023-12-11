@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from fabric import Connection
 from pathlib import Path
+from os.path import basename, join, dirname
+from os import walk
 
 
 def hist_data(data, version, basename, name):
@@ -67,8 +69,12 @@ def problematic_issues(data, version):
     print(f"Number of vulnerabilities with {print_version} Base Score > 9: {len(big_problem)}")
 
     # Print the information of the identified issue
-    [print_data(issue=x, version=key_version) for x in big_problem]
+    # [print_data(issue=x, version=key_version) for x in big_problem]
 
+    # Print the average of the score
+    scores = [x['nvd_data'][0][key_version]['base_score'] for x in data]
+    average = round(sum(scores) / len(scores), 2)
+    print(f"Average Score: {average}")
 
 def open_file(file):
     with open(file) as f:
@@ -77,11 +83,23 @@ def open_file(file):
     return file_data
 
 
-def get_local_file(args):
-    basename = args[1]
-    name = args[1].split('-')[0]
+def get_local_file(filename):
+    folder_path = join(join(dirname(dirname(__file__)), "go"), "Anchore")
+    file_path = ''
 
-    file_data = open_file(args[1])
+    # Walk through the directory tree starting from the specified folder
+    for root, dirs, files in walk(folder_path):
+        if filename in files:
+            file_path = join(root, filename)
+            print("File found at:", file_path)
+            break
+    else:
+        print("File not found in the specified folder.")
+
+    basename = filename
+    name = filename.split('-')[0]
+
+    file_data = open_file(file_path)
 
     return basename, name, file_data
 
@@ -142,7 +160,7 @@ if __name__ == '__main__':
         basename, name, content = get_files(sys.argv)
     elif parameters == 2:
         # We want to analyse only one component (already local file)
-        basename, name, content = get_local_file(sys.argv)
+        basename, name, content = get_local_file(filename=sys.argv[1])
     elif parameters >= 2:
         # there is a list of images to be analysed and merged to have an overall view (already local files)
         print("Number of parameters wrong, it is only needed 2 or 3")
