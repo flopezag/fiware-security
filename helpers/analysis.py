@@ -8,8 +8,8 @@ from os.path import basename, join, dirname
 from os import walk
 
 
-def hist_data(data, version, basename, name):
-    filename = basename + '_v' + version + '.png'
+def hist_data(data, version, base_name, name):
+    filename = base_name + '_v' + version + '.png'
 
     if version == '2':
         key_version = 'cvss_v2'
@@ -76,6 +76,7 @@ def problematic_issues(data, version):
     average = round(sum(scores) / len(scores), 2)
     print(f"Average Score: {average}")
 
+
 def open_file(file):
     with open(file) as f:
         file_data = load(f)
@@ -84,7 +85,12 @@ def open_file(file):
 
 
 def get_local_file(filename):
-    folder_path = join(join(dirname(dirname(__file__)), "go"), "Anchore")
+    if "Anchore" in filename is False and "go" in filename is False:
+        folder_path = join(join(dirname(dirname(__file__)), "go"), "Anchore")
+    else:
+        folder_path = dirname(filename)
+        filename = basename(filename)
+
     file_path = ''
 
     # Walk through the directory tree starting from the specified folder
@@ -96,12 +102,12 @@ def get_local_file(filename):
     else:
         print("File not found in the specified folder.")
 
-    basename = filename
+    base_name = filename
     name = filename.split('-')[0]
 
     file_data = open_file(file_path)
 
-    return basename, name, file_data
+    return base_name, name, file_data
 
 
 def get_files(args):
@@ -124,15 +130,15 @@ def get_files(args):
     files = result.stdout.split("\n")[:-1]
     [c.get(file) for file in files]
 
-    basename = [Path(file).name for file in files]
-    name = [x.split('-')[0] for x in basename]
+    base_name = [Path(file).name for file in files]
+    name = [x.split('-')[0] for x in base_name]
 
-    file_data = [open_file(x) for x in basename]
+    file_data = [open_file(x) for x in base_name]
 
-    return basename, name, file_data
+    return base_name, name, file_data
 
 
-def analyse_data(basename, name, content):
+def analyse_data(base_name, name, content):
     print(f'\n\nSummary of vulnerabilities of {name}')
     print(f"Number of vulnerabilities: {len(content['vulnerabilities'])}")
 
@@ -144,8 +150,8 @@ def analyse_data(basename, name, content):
     print(f"Number of vulnerabilities without NVD Data: {len(ohne_nvd)}")
     print(f"Number of vulnerabilities with NVD Data: {len(mit_nvd)}")
 
-    hist_data(data=mit_nvd, version='2', basename=basename, name=name)
-    hist_data(data=mit_nvd, version='3', basename=basename, name=name)
+    hist_data(data=mit_nvd, version='2', base_name=base_name, name=name)
+    hist_data(data=mit_nvd, version='3', base_name=base_name, name=name)
 
     problematic_issues(data=mit_nvd, version='2')
     problematic_issues(data=mit_nvd, version='3')
@@ -157,22 +163,22 @@ if __name__ == '__main__':
 
     if parameters == 1:
         # We want to analyse all components (getting remote files)
-        basename, name, content = get_files(sys.argv)
+        base_name, name, content = get_files(sys.argv)
     elif parameters == 2:
         # We want to analyse only one component (already local file)
-        basename, name, content = get_local_file(filename=sys.argv[1])
+        base_name, name, content = get_local_file(filename=sys.argv[1])
     elif parameters >= 2:
         # there is a list of images to be analysed and merged to have an overall view (already local files)
         print("Number of parameters wrong, it is only needed 2 or 3")
         exit(1)
 
-    if isinstance(basename, str):
-        analyse_data(basename=basename, name=name, content=content)
+    if isinstance(base_name, str):
+        analyse_data(base_name=base_name, name=name, content=content)
     else:
         # There is a list of files to analyse
 
         # If there is only 1 file we analyse that file
         # if there is n files, we want to mix all the files in one to generate an overall analysis of a component
         # (this is the case of Stellio with several images analysed
-        for i in range(0, len(basename)):
-            analyse_data(basename=basename[i], name=name[i], content=content[i])
+        for i in range(0, len(base_name)):
+            analyse_data(base_name=base_name[i], name=name[i], content=content[i])
