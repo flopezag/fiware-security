@@ -52,13 +52,9 @@ var checkCmd = &cobra.Command{
 
 				fmt.Println("    Filename of results" + out)
 
-				// Step 1: Anchore and Clair scan image, anchore is failing now Analysis Status: analysis_failed for Orion-LD
+				// Step 1: Anchore scan image, anchore is failing now Analysis Status: analysis_failed for Orion-LD
 				out = Anchore(images[j], out)
 				files = append(files, out)
-
-				// Clair is also failing,     Security analysis of fiware/orion:latest image...exit status 1: Container clair-db-1  Running
-				// out = Clair(images[j], out)
-				// files = append(files, out)
 			}
 
 			// var repositories []string = Search(ge, "Repository")
