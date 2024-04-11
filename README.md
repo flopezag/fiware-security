@@ -165,11 +165,7 @@ over [anchore-ubi.yaml](https://github.com/flopezag/fiware-security/blob/master/
 ## Credits
 
 * Docker
-* docker-compose
-* [Clair Vulnerability Scanner](https://github.com/coreos/clair)
-* [Clair-Scanner](https://github.com/arminc/clair-scanner) (release v8 is included)
-* [clair-local-scan](https://github.com/arminc/clair-local-scan)
-* [clair-container-scan](https://github.com/usr42/clair-container-scan)
+* [Anchore]
 * [Docker Bench Security](https://github.com/docker/docker-bench-security)
 
 ## License
