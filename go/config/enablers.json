@@ -67,7 +67,7 @@
             "email": "fernando.lopez@fiware.org"
         },
         {
-            "name": "Orion-LD",
+            "name": "OrionLD",
             "image": [
                 "fiware/orion-ld:latest"
             ],

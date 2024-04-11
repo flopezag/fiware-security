@@ -31,6 +31,7 @@ services:
       - "2181"
     logging:
       driver: none
+  
   kafka:
     labels:
       org.fiware: 'tutorial'
@@ -54,6 +55,7 @@ services:
       - zookeeper
     logging:
       driver: none
+  
   postgres:
     labels:
       org.fiware: 'tutorial'
@@ -70,6 +72,7 @@ services:
       POSTGRES_DB: ngb
     logging:
       driver: none
+  
   scorpio:
     labels:
       org.fiware: 'tutorial'

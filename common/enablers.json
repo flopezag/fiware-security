@@ -51,9 +51,9 @@
         },
         {
             "name": "Stellio",
-            "image": "stellio/stellio-timescale-postgis:1.7.2-pg11,stellio/stellio-api-gateway:dev,stellio/stellio-entity-service:dev,stellio/stellio-search-service:dev,stellio/stellio-subscription-service:dev",
+            "image": "stellio/stellio-api-gateway:latest-dev,stellio/stellio-search-service:latest-dev,stellio/stellio-subscription-service:latest-dev",
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
-            "exclude": "confluentinc/cp-zookeeper,confluentinc/cp-kafka,neo4j",
+            "exclude": "confluentinc/cp-kafka,stellio/stellio-timescale-postgis",
             "email": "benoit.orihuela@egm.io"
         },
         {
@@ -69,6 +69,13 @@
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-wirecloud.yml",
             "exclude": "fiware/idm:latest,postgres,mysql:5.7,elasticsearch:2.4,memcached:1",
             "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Scorpio",
+            "image": "",
+            "compose": "",
+            "exclude": "",
+            "email": "Benjamin.Hebgen@neclab.eu"
         }
     ]
 }
