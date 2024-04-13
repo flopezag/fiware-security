@@ -34,9 +34,38 @@
             "repository": [
                 "https://github.com/telefonicaid/sigfox-iotagent.git"
             ],
-            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-sigfox.yml",
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/common/docker-compose-sigfox.yml",
             "exclude": [
                 "fiware/orion"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "IoTAgent-JSON",
+            "image": [
+                "fiware/iotagent-json:latest"
+            ],
+            "repository": [
+                "https://github.com/telefonicaid/iotagent-json.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/common/docker-compose-iotagent-json.yml",
+            "exclude": [
+                "fiware/orion",
+                "mongo"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "IoTAgent-OPCUA",
+            "image": [
+                "fiware/iotagent-opcua"
+            ],
+            "repository": [
+                "https://github.com/Engineering-Research-and-Development/iotagent-opcua.git"
+            ],
+            "compose": "",
+            "exclude": [
+                ""
             ],
             "email": "fernando.lopez@fiware.org"
         },
@@ -150,6 +179,19 @@
                 "fiware/idm:latest",
                 "postgres,mysql:5.7",
                 "elasticsearch:2.4, memcached:1"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Idra",
+            "image": [
+                "idraopendata/idra"
+            ],
+            "repository": [
+                "https://github.com/OPSILab/Idra.git"
+            ],
+            "compose": "",
+            "exclude": [
             ],
             "email": "fernando.lopez@fiware.org"
         }
