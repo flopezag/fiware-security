@@ -33,7 +33,7 @@ var checkCmd = &cobra.Command{
 		} else if len(args) == 1 {
 			// We have received a specific FIWARE GE to scan
 			ge := args[0]
-			fmt.Println("FIWARE GE to scan: " + ge)
+			fmt.Println("\nFIWARE GE to scan: " + ge)
 			ParseJSON()
 			var images []string = Search(ge, "Image")
 
@@ -50,30 +50,30 @@ var checkCmd = &cobra.Command{
 					fmt.Print("Success\n\n")
 				}
 
-				fmt.Println("    Filename of results" + out)
+				fmt.Println("    Filename of results: " + out)
 
-				// Step 1: Anchore scan image, anchore is failing now Analysis Status: analysis_failed for Orion-LD
-				out = Anchore(images[j], out)
+				// Step 1: Grype scan image
+				out = Grype(images[j], out)
 				files = append(files, out)
 			}
 
-			// var repositories []string = Search(ge, "Repository")
-			// for j := 0; j < len(repositories); j++ {
-			// 	out := FilenameFromUrl(ge, repositories[j])
-			//	fmt.Println(out)
-			//
-			//	out = Gitleaks(repositories[j], out)
-			//	files = append(files, out)
+			//var repositories []string = Search(ge, "Repository")
+			//for j := 0; j < len(repositories); j++ {
+			//	out := FilenameFromUrl(ge, repositories[j])
+			//fmt.Println(out)
+			
+			//out = Gitleaks(repositories[j], out)
+			//files = append(files, out)
 			//}
 
-			//			var compose []string = Search(ge, "Compose")
-			//			out := FilenameFromUrl(ge, compose[0])
-			//			fmt.Println(out)
-			//			out = Docker_bench_security(compose[0], out)
-			//			files = append(files, out)
+			// var compose []string = Search(ge, "Compose")
+			// out := FilenameFromUrl(ge, compose[0])
+			// fmt.Println(out)
+			// out = Docker_bench_security(compose[0], out)
+			// files = append(files, out)
 
 			// Send the files by email
-			SendMail(files)
+			// SendMail(files)
 		}
 
 		clean()

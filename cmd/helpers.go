@@ -213,7 +213,7 @@ func check_mandatory_commands() {
 	// Secondly: There are several commands tools needed to be installed to be used by Docker-Bench-Security
 	fmt.Print("    Checking mandatory programs... ")
 
-	programs := [10]string{"awk", "docker", "grep", "stat", "tee", "tail", "wc", "xargs", "truncate", "sed"}
+	programs := [11]string{"awk", "docker", "grep", "stat", "tee", "tail", "wc", "xargs", "truncate", "sed", "grype"}
 
 	for i := 0; i < 10; i++ {
 		cmd := exec.Command("bash", "-c", "command", "-v", programs[i])

@@ -1,6 +1,0 @@
-# Python version: 3.12
-# Use 'virtualenv -ppython3.12 .venv' to define the virtual environment
-matplotlib==3.8.4
-pandas==2.2.2
-fabric==3.2.2
-PyQt6==6.6.1
