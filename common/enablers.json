@@ -37,14 +37,14 @@
         },
         {
             "name": "Orion-LD",
-            "image": "fiware/orion-ld:latest",
+            "image": "fiware/orion-ld:1.9.0",
             "compose": "https://raw.githubusercontent.com/FIWARE/context.Orion-LD/develop/docker/docker-compose.yml",
             "exclude": "",
             "email": "ken.zangelin@fiware.org"
         },
         {
             "name": "QuantumLeap",
-            "image": "smartsdk/quantumleap:latest",
+            "image": "orchestracities/quantumleap:1.0.0",
             "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-quantumleap.yml",
             "exclude": "",
             "email": "fernando.lopez@fiware.org"

@@ -32,7 +32,7 @@ func Grype(enabler, filename string) string {
 	// grype fiware/idm:latest --scope all-layers -o json > ./results/keyrock.json
 
 	fmt.Print("    Analysing the FIWARE Enabler... ")
-	cmd := exec.Command("grype", "fiware/idm:latest", "--scope", "all-layers", "-o", "json")
+	cmd := exec.Command("grype", enabler, "--scope", "all-layers", "-o", "json")
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()
@@ -45,7 +45,7 @@ func Grype(enabler, filename string) string {
 	}
 
 	// Step 4: Save the out into filename
-	filename = "./results/" + filename
+	filename = "../results/" + filename
 	fmt.Print("    Saving the file: ")
 	err = os.WriteFile(filename, out.Bytes(), 0644)
 	if err != nil {

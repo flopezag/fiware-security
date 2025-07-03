@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/flopezag/fiware-security">
-    <img src="go/doc/FIWARESecurity.png" alt="Logo" width="137" height="150">
+    <img src="doc/FIWARESecurity.png" alt="Logo" width="137" height="150">
   </a>
 
 <h3 align="center">FIWARE Cybersecurity Analysis of the FIWARE Generic Enablers</h3>
@@ -122,6 +122,20 @@ exploitation. The table output shows the EPSS percentile, a one-way transform of
 EPSS score showing the proportion of all scored vulnerabilities with an equal or lower 
 probability. Percentiles linearize a heavily skewed distribution, making threshold 
 choice (e.g. “only CVEs above the 90th percentile”) straightforward.
+
+## Manual review of the output
+
+You can use [jq]() to check the output generated in JSON format, for example, to get the risk values and the total number of issues associated
+to a report generated for Orion component, you can execute the following
+command:
+
+```bash
+jq '[.matches[].vulnerability.risk] as $risks | {risk: $risks, n: ($risks | length)}' Orion_orion_20250702_1819_grype.json
+```
+
+## Roadmap
+
+If you want to take a look to the Roadmap and Refactoring Plan check the content of [Refactoring.md](./doc/Refactoring.md) file.
 
 ## License
 

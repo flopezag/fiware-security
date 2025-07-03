@@ -3,7 +3,7 @@
         {
             "name": "Cygnus",
             "image": [
-                "fiware/cygnus-ngsi"
+                "fiware/cygnus-ngsi:latest"
             ],
             "repository": [
                 "https://github.com/telefonicaid/fiware-cygnus.git"
@@ -58,7 +58,7 @@
         {
             "name": "IoTAgent-OPCUA",
             "image": [
-                "fiware/iotagent-opcua"
+                "fiware/iotagent-opcua:latest"
             ],
             "repository": [
                 "https://github.com/Engineering-Research-and-Development/iotagent-opcua.git"
@@ -98,7 +98,7 @@
         {
             "name": "OrionLD",
             "image": [
-                "fiware/orion-ld:latest"
+                "fiware/orion-ld:1.9.0"
             ],
             "repository": [
                 "https://github.com/FIWARE/context.Orion-LD"
@@ -110,7 +110,7 @@
         {
             "name": "QuantumLeap",
             "image": [
-                "smartsdk/quantumleap:latest"
+                "orchestracities/quantumleap:1.0.0"
             ],
             "repository": [
                 "https://github.com/orchestracities/ngsi-timeseries-api.git"
@@ -137,9 +137,54 @@
             "email": "fernando.lopez@fiware.org"
         },
         {
+            "name": "StellioAPI",
+            "image": [
+                "stellio/stellio-api-gateway:latest-dev"
+            ],
+            "repository": [
+                "https://github.com/stellio-hub/stellio-context-broker.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
+            "exclude": [
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "StellioSearch",
+            "image": [
+                "stellio/stellio-search-service:latest-dev"
+            ],
+            "repository": [
+                "https://github.com/stellio-hub/stellio-context-broker.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
+            "exclude": [
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "StellioSubscription",
+            "image": [
+                "stellio/stellio-subscription-service:latest-dev"
+            ],
+            "repository": [
+                "https://github.com/stellio-hub/stellio-context-broker.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
+            "exclude": [
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
             "name": "Scorpio",
             "image": [
-                "scorpiobroker/all-in-one-runner:java-kafka-4.1.8"
+                "scorpiobroker/all-in-one-runner:java-kafka-5.0.9"
             ],
             "repository": [
                 "https://github.com/ScorpioBroker/ScorpioBroker.git"
@@ -185,7 +230,7 @@
         {
             "name": "Idra",
             "image": [
-                "idraopendata/idra"
+                "idraopendata/idra:v3.1.5"
             ],
             "repository": [
                 "https://github.com/OPSILab/Idra.git"

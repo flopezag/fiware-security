@@ -41,7 +41,7 @@ var checkCmd = &cobra.Command{
 				out := Filename(ge, images[j])
 
 				// Step 0: Pull the docker image
-				fmt.Print("    Pulling image... ")
+				fmt.Print("    Pulling image " + ge + " from " + images[j] + " ... ")
 				err := exec.Command("docker", "pull", images[j]).Run()
 				if err != nil {
 					fmt.Println(err.Error())
