@@ -23,6 +23,7 @@
 - Unify the file enablers.json
 - Automatic email generation with the generated output of the analysis (results data.)
 - Create tests
+- Update Go package
 
 ### 🔧 Tasks
 - [x] **Refactor `analyzeAndVisualize`**:
@@ -39,6 +40,12 @@
 - [ ] Create some tests files associated to the code.
 - [ ] Keep only enablers.json in config file.
 - [ ] Auto-email report summary to the email field in enablers.json
+- [ ] Check the automatic update of go and go package and develop a refactoring if it is needed:
+    - [ ] circl
+    - [ ] go-git
+    - [ ] crypto
+    - [ ] docker
+    - [ ] grpc
  
 ---
 
