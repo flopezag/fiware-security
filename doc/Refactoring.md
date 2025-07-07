@@ -40,6 +40,7 @@
 - [ ] Create some tests files associated to the code.
 - [ ] Keep only enablers.json in config file.
 - [ ] Auto-email report summary to the email field in enablers.json
+- [ ] Filter only critical cases in the output file and send the document to the owners.
 - [ ] Check the automatic update of go and go package and develop a refactoring if it is needed:
     - [ ] circl
     - [ ] go-git
