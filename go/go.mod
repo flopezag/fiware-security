@@ -1,6 +1,6 @@
 module security/scan
 
-go 1.19
+go 1.23.0
 
 require (
 	github.com/docker/docker v20.10.17+incompatible
@@ -8,7 +8,7 @@ require (
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
 	github.com/zricethezav/gitleaks/v8 v8.11.0
-	golang.org/x/oauth2 v0.0.0-20220808172628-8227340efae7
+	golang.org/x/oauth2 v0.27.0
 	google.golang.org/api v0.93.0
 )
 
