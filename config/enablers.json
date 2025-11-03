@@ -1,0 +1,244 @@
+{
+    "enablers": [
+        {
+            "name": "Cygnus",
+            "image": [
+                "fiware/cygnus-ngsi:latest"
+            ],
+            "repository": [
+                "https://github.com/telefonicaid/fiware-cygnus.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-cygnus.yml",
+            "exclude": [
+                "mongo"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Draco",
+            "image": [
+                "ging/fiware-draco:latest"
+            ],
+            "repository": [
+                "https://github.com/ging/fiware-draco.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-draco.yml",
+            "exclude": [],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "IoTAgent-SigFox",
+            "image": [
+                "fiware/sigfox-iotagent:latest"
+            ],
+            "repository": [
+                "https://github.com/telefonicaid/sigfox-iotagent.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/common/docker-compose-sigfox.yml",
+            "exclude": [
+                "fiware/orion"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "IoTAgent-JSON",
+            "image": [
+                "fiware/iotagent-json:latest"
+            ],
+            "repository": [
+                "https://github.com/telefonicaid/iotagent-json.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/common/docker-compose-iotagent-json.yml",
+            "exclude": [
+                "fiware/orion",
+                "mongo"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "IoTAgent-OPCUA",
+            "image": [
+                "fiware/iotagent-opcua:latest"
+            ],
+            "repository": [
+                "https://github.com/Engineering-Research-and-Development/iotagent-opcua.git"
+            ],
+            "compose": "",
+            "exclude": [
+                ""
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Keyrock",
+            "image": [
+                "fiware/idm:latest"
+            ],
+            "repository": [
+                "https://github.com/ging/fiware-idm.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-keyrock.yml",
+            "exclude": [
+                "mysql:5.7"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Orion",
+            "image": [
+                "fiware/orion:latest"
+            ],
+            "repository": [
+                "https://github.com/telefonicaid/fiware-orion.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/telefonicaid/fiware-orion/master/docker/docker-compose.yml",
+            "exclude": [],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "OrionLD",
+            "image": [
+                "fiware/orion-ld:1.9.0"
+            ],
+            "repository": [
+                "https://github.com/FIWARE/context.Orion-LD"
+            ],
+            "compose": "https://raw.githubusercontent.com/FIWARE/context.Orion-LD/develop/docker/docker-compose.yml",
+            "exclude": [],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "QuantumLeap",
+            "image": [
+                "orchestracities/quantumleap:1.0.0"
+            ],
+            "repository": [
+                "https://github.com/orchestracities/ngsi-timeseries-api.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-quantumleap.yml",
+            "exclude": [],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Stellio",
+            "image": [
+                "stellio/stellio-api-gateway:latest-dev",
+                "stellio/stellio-search-service:latest-dev",
+                "stellio/stellio-subscription-service:latest-dev"
+            ],
+            "repository": [
+                "https://github.com/stellio-hub/stellio-context-broker.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
+            "exclude": [
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "StellioAPI",
+            "image": [
+                "stellio/stellio-api-gateway:latest-dev"
+            ],
+            "repository": [
+                "https://github.com/stellio-hub/stellio-context-broker.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
+            "exclude": [
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "StellioSearch",
+            "image": [
+                "stellio/stellio-search-service:latest-dev"
+            ],
+            "repository": [
+                "https://github.com/stellio-hub/stellio-context-broker.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
+            "exclude": [
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "StellioSubscription",
+            "image": [
+                "stellio/stellio-subscription-service:latest-dev"
+            ],
+            "repository": [
+                "https://github.com/stellio-hub/stellio-context-broker.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-stellio.yml",
+            "exclude": [
+                "confluentinc/cp-kafka",
+                "stellio/stellio-timescale-postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Scorpio",
+            "image": [
+                "scorpiobroker/all-in-one-runner:java-kafka-5.0.9"
+            ],
+            "repository": [
+                "https://github.com/ScorpioBroker/ScorpioBroker.git"
+            ],
+            "compose": "",
+            "exclude": [
+                "zookeeper",
+                "bitnami/kafka",
+                "postgis/postgis"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Wilma",
+            "image": [
+                "fiware/pep-proxy:latest"
+            ],
+            "repository": [
+                "https://github.com/ging/fiware-pep-proxy.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-wilma.yml",
+            "exclude": [
+                "fiware/idm:latest,mysql:5.7"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Wirecloud",
+            "image": [
+                "fiware/wirecloud:latest"
+            ],
+            "repository": [
+                "https://github.com/Wirecloud/wirecloud.git"
+            ],
+            "compose": "https://raw.githubusercontent.com/flopezag/fiware-security/develop/Common/docker-compose-wirecloud.yml",
+            "exclude": [
+                "fiware/idm:latest",
+                "postgres,mysql:5.7",
+                "elasticsearch:2.4, memcached:1"
+            ],
+            "email": "fernando.lopez@fiware.org"
+        },
+        {
+            "name": "Idra",
+            "image": [
+                "idraopendata/idra:v3.1.5"
+            ],
+            "repository": [
+                "https://github.com/OPSILab/Idra.git"
+            ],
+            "compose": "",
+            "exclude": [
+            ],
+            "email": "fernando.lopez@fiware.org"
+        }
+    ]
+}

@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/flopezag/fiware-security">
-    <img src="go/doc/FIWARESecurity.png" alt="Logo" width="137" height="150">
+    <img src="doc/FIWARESecurity.png" alt="Logo" width="137" height="150">
   </a>
 
 <h3 align="center">FIWARE Cybersecurity Analysis of the FIWARE Generic Enablers</h3>
@@ -21,7 +21,9 @@
   </p>
 </div>
 
-## Overview
+# Security Scan of FIWARE Catalogue components
+
+This program has been developed to facilitate the Security Scan of the FIWARE Catalogue components and generate a report to facilitate the the resolution of identified issues on them.
 
 Automatically scan a particular local docker image or all local docker containers 
 with [Clair Vulnerability Scanner](https://github.com/coreos/clair) using 
@@ -33,144 +35,107 @@ to check common best-practices around deploying FIWARE Docker containers in prod
 The tests are all automated, and are inspired by the 
 [CIS Docker Community Edition Benchmark v1.1.0](https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_Community_Edition_Benchmark_v1.1.0.pdf).
 
+The information of the components to be analyzed is maintained in the file [enablers.json](./config/enablers.json).
 
-## Installation
+## Go installation
 
-There are two ways to install and execute the code. The first one is installing locally
-the configuration files and script to execute the [docker-compose](https://docs.docker.com/compose/) 
-locally (see [README.md](docker/README.md)) or [Ansible](https://www.ansible.com/) to deploy 
-a virtual machine inside [FIWARE Lab](https://cloud.lab.fiware.org) and preconfigure all 
-the system to launch the scan automatically (see [README.md](deploy/README.md)).
+To install the Go language, you can follow the instructions detailed in the [Go Installation instructions](https://go.dev/doc/install). The following are the steps for Linux installation
 
-## Executing FIWARE Docker Security Scan locally
+1. Remove any previous Go installation by deleting the /usr/local/go folder (if it exists), then extract the archive you just downloaded into /usr/local, creating a fresh Go tree in /usr/local/go:
 
-This is the option when you want to execute locally the scan over some FIWARE GE or over the
-complete list of FIWARE GEs.
+    ```bash
+    $ rm -rf /usr/local/go && tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz
+    ```
 
-### Prerequisites
+    (You may need to run the command as root or through sudo).
 
-* Docker version 18.09.1 (or newer)
-* docker-compose version 1.23.2 (or newer)
+    Do not untar the archive into an existing /usr/local/go tree. This is known to produce broken Go installations.
 
-### Configuration
+2. Add /usr/local/go/bin to the PATH environment variable.
+You can do this by adding the following line to your $HOME/.profile or /etc/profile (for a system-wide installation):
 
-The only things that you have to do is download the [scan.py](scan.py) 
-file in your local folder to execute the corresponding security scanner over the selected 
-FIWARE GE or over the predefined set of FIWARE GEs (see [enablers.json](enablers.json)).
+    ```bash
+    export PATH=$PATH:/usr/local/go/bin
+    ```
 
-The execution of this script automatically download the following files:
-- [docker-compose](docker-compose.yml)
-- [default FIWARE GEs](enablers.json)
+    Note: Changes made to a profile file may not apply until the next time you log into your computer. To apply the changes immediately, just run the shell commands directly or execute them from the profile using a command such as source $HOME/.profile.
 
-And it will clone as well the [Docker Bench Security](https://github.com/docker/docker-bench-security) 
-folder to make the CIS Docker Benchmark nalyse.
+3. Verify that you've installed Go by opening a command prompt and typing the following command:
 
-Before launching the script, it is needed to configure the credentials to access to the 
-[FIWARE Nexus instance](https://nexus.lab.fiware.org). It will be the place in which we
-store the results of the execution of the scan for historical reasons.
+    ```bash
+    $ go version
+    ```
 
-### Execution
+    Confirm that the command prints the installed version of Go.
 
-You can obtain a help description about the execution of the script just executing the 
-following command:
+## Update dependencies
+
+To update the current dependencies of the project, execute the following command:
 
 ```bash
-./container-scan.py -h
+go mod tidy
 ```
 
-Which show the following content:
+## Compile the program
+
+The command to generate the executable command of the parser is the following:
 
 ```bash
-usage: container-scan.py [-h] [-p] [-v] [-d DOCKER_IMAGE]
-
-Perform security analysis of the FIWARE GE docker images.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -p, --pull            Pull the docker image from Docker Hub
-  -v, --verbose         Verbose screen output
-  -d DOCKER_IMAGE, --docker_image DOCKER_IMAGE
-                        Name of the Docker Image to be analysed. If it is not
-                        provided the Docker images are obtained from the
-                        enablers.json file.
-```    
-
-The script will produce 2 files for each FIWARE GE in json format with the format:
-
-```text
-<name of ge><date>_<time>.json
-``` 
-
-Inside this folder and into the docker-bench-security folder.
-
-Once that we get the files we can get the numbers of security vulnerabilies issues
-just executing the following shell commands with the use of the jq program for the
-CVE vulnerabilities:
-
-```bash
-for a in Low Medium High; 
-do 
-  data=$(more more <name of ge><date>_<time>.json | jq ".[].vulnerabilities[].severity | select (.==\"${a}\")" | wc -l)
-  echo $a  $data
-done
+go build .
 ```
 
-In case of the CIS Docker Benchmark (security best practices) execute the following scripts:
+It will generate the `scan` program that we will use to generate the summary of security vulnerabilities of our code.
+
+## Run
+
+To execute the scan, just specify the option of `check` together with the Enabler that we wanted to analyse. The list of available enablers can be found in the [enablers.json](./config/enablers.json) file. The command should be the following for Keyrock enabler:
 
 ```bash
-for a in WARN PASS INFO PASS; 
-do 
-  data=$(more docker-bench-security.sh.log.json | jq ".tests[].results[].result | select (.==\"${a}\")" | wc -l)
-  echo $a  $data
-done
+scan check Keyrock
 ```
 
-Last but not least, we have to stop the corresponding container for clair and db.
+It will generate a file in the `results`folder with the result of the Security Scan Analysis with details of the Date and Time of this scan (e.g., Keyrock_idm_20240411_1254_grype.json) in JSON format.
+
+Furthermore, we can use a other command to summarize the data and visualize the histogram of the different vulnerabilities found in the scan.
 
 ```bash
-$ docker ps
+scan visualize Keyrock
+```
+This provide console output with teh following content:
 
-CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS                  PORTS               NAMES
-0ef0d8e240f8        arminc/clair-local-scan:latest   "/clair -config=/con…"   29 hours ago        Up 29 hours (healthy)   6060-6061/tcp       docker_clair_1
-3780c4add4a5        arminc/clair-db:latest           "docker-entrypoint.s…"   29 hours ago        Up 29 hours (healthy)   5432/tcp            docker_db_1
+- Total count of vulnerabilities
+- Severity test histogram
+- EPSS and risk averages
+- Count of EPSS > 0.9 and Risk > 90
 
-$ docker stop 0ef0d8e240f8 3780c4add4a5
-0ef0d8e240f8
-3780c4add4a5
+where:
+
+- **Severity**: String severity based on CVSS scores and indicate the significance 
+of a vulnerability in levels. This balances concerns such as ease of exploitability, 
+and the potential to affect confidentiality, integrity, and availability of software 
+and services.
+
+- **EPSS**: [Exploit Prediction Scoring System](https://www.first.org/epss/model) is 
+a metric expressing the likelihood that a vulnerability will be exploited in the wild 
+over the next 30 days (on a 0–1 scale); higher values signal a greater likelihood of 
+exploitation. The table output shows the EPSS percentile, a one-way transform of the 
+EPSS score showing the proportion of all scored vulnerabilities with an equal or lower 
+probability. Percentiles linearize a heavily skewed distribution, making threshold 
+choice (e.g. “only CVEs above the 90th percentile”) straightforward.
+
+## Manual review of the output
+
+You can use [jq]() to check the output generated in JSON format, for example, to get the risk values and the total number of issues associated
+to a report generated for Orion component, you can execute the following
+command:
+
+```bash
+jq '[.matches[].vulnerability.risk] as $risks | {risk: $risks, n: ($risks | length)}' Orion_orion_20250702_1819_grype.json
 ```
 
-## Adding the Anchore Scan GitHub Action Workflow to a repository directly
+## Roadmap
 
-Anchore provide a [GitHub Action](https://github.com/anchore/scan-action) for Vulnerability Scanning.
-Two sample GitHub Action Workflows have been added to this repository.
-
-For example, to enable an Anchore Scan of a Docker image based on **node-slim**:
-
--  Copy the [anchore-node-slim.yaml](https://github.com/flopezag/fiware-security/blob/master/.github/workflows/anchore-node-slim.yml) file to `.github/workflows/anchore-node-slim.yml
--  Amend the Dockerfile [context location](https://github.com/flopezag/fiware-security/blob/master/.github/workflows/anchore-node-slim.yml#L34) if necessary - the example assumes a folder called `docker` is used.
--  After committing and pushing the file, run the new GitHub Action [manually](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow)
-
-A security report will be displayed on
-`https://github.com/<Owner>/<Repository>/security/code-scanning?query=is%3Aopen+branch%3Amaster+severity%3Aerror`
-
-
-![](./img/alerts.png)
-
-Like any GitHub Action Workflow, the creation of additional Docker images to scan
-can also be added to a repository and creation can be arbitrarily more complex.
-A second example file shows how to build an [alternative base image](https://kuberty.io/blog/best-os-for-docker/)
-using `--build-arg` parameters on the command line to create a container based on [Red Hat UBI (Universal Base Image) 8](https://developers.redhat.com/articles/2021/11/08/optimize-nodejs-images-ubi-8-nodejs-minimal-image). To scan this alternate image, just copy
-over [anchore-ubi.yaml](https://github.com/flopezag/fiware-security/blob/master/.github/workflows/anchore-ubi.yml) to `.github/workflows/anchore-ubi.yml`
-
-## Credits
-
-* Docker
-* docker-compose
-* [Clair Vulnerability Scanner](https://github.com/coreos/clair)
-* [Clair-Scanner](https://github.com/arminc/clair-scanner) (release v8 is included)
-* [clair-local-scan](https://github.com/arminc/clair-local-scan)
-* [clair-container-scan](https://github.com/usr42/clair-container-scan)
-* [Docker Bench Security](https://github.com/docker/docker-bench-security)
+If you want to take a look to the Roadmap and Refactoring Plan check the content of [Refactoring.md](./doc/Refactoring.md) file.
 
 ## License
 

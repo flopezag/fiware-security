@@ -33,7 +33,7 @@ var checkCmd = &cobra.Command{
 		} else if len(args) == 1 {
 			// We have received a specific FIWARE GE to scan
 			ge := args[0]
-			fmt.Println("FIWARE GE to scan: " + ge)
+			fmt.Println("\nFIWARE GE to scan: " + ge)
 			ParseJSON()
 			var images []string = Search(ge, "Image")
 
@@ -41,7 +41,7 @@ var checkCmd = &cobra.Command{
 				out := Filename(ge, images[j])
 
 				// Step 0: Pull the docker image
-				fmt.Print("\nPulling image... ")
+				fmt.Print("    Pulling image " + ge + " from " + images[j] + " ... ")
 				err := exec.Command("docker", "pull", images[j]).Run()
 				if err != nil {
 					fmt.Println(err.Error())
@@ -50,33 +50,30 @@ var checkCmd = &cobra.Command{
 					fmt.Print("Success\n\n")
 				}
 
-				fmt.Println(out)
+				fmt.Println("    Filename of results: " + out)
 
-				// Step 1: Anchore and Clair scan image
-				out = Anchore(images[j], out)
-				files = append(files, out)
-
-				out = Clair(images[j], out)
+				// Step 1: Grype scan image
+				out = Grype(images[j], out)
 				files = append(files, out)
 			}
 
-			var repositories []string = Search(ge, "Repository")
-			for j := 0; j < len(repositories); j++ {
-				out := FilenameFromUrl(ge, repositories[j])
-				fmt.Println(out)
+			//var repositories []string = Search(ge, "Repository")
+			//for j := 0; j < len(repositories); j++ {
+			//	out := FilenameFromUrl(ge, repositories[j])
+			//fmt.Println(out)
+			
+			//out = Gitleaks(repositories[j], out)
+			//files = append(files, out)
+			//}
 
-				out = Gitleaks(repositories[j], out)
-				files = append(files, out)
-			}
-
-			var compose []string = Search(ge, "Compose")
-			out := FilenameFromUrl(ge, compose[0])
-			fmt.Println(out)
-			out = Docker_bench_security(compose[0], out)
-			files = append(files, out)
+			// var compose []string = Search(ge, "Compose")
+			// out := FilenameFromUrl(ge, compose[0])
+			// fmt.Println(out)
+			// out = Docker_bench_security(compose[0], out)
+			// files = append(files, out)
 
 			// Send the files by email
-			SendMail(files)
+			// SendMail(files)
 		}
 
 		clean()
@@ -118,16 +115,7 @@ func SendMail(files []string) {
 
 	gomail.OAuthGmailService()
 
-	status, err := gomail.SendEmailOAuth2(data)
-	if err != nil {
-		log.Fatalf("Error: %v", err)
-	}
-
-	if status {
-		log.Println("Email sent successfully using OAUTH")
-	}
-
-	status, err = gomail.SendEmailOAuth2WithAttachment(data, files)
+	status, err := gomail.SendEmailOAuth2WithAttachment(data, files)
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}

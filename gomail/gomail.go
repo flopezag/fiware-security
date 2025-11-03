@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"io/ioutil"
+	"os"
 	"log"
 	"math/rand"
 	"net/http"
 	"path/filepath"
 	"time"
+	"strings"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -121,8 +122,15 @@ func SendEmailOAuth2WithAttachment(data Data, fileNames []string) (bool, error) 
 func AddAttachments(boundary string, files []string) []byte {
 	mimeBody := []byte("")
 
+	println(os.Getwd())
+
 	for _, file := range files {
-		fileBytes, err := ioutil.ReadFile(file)
+		if strings.Contains(file, "anchore") {
+			file = "./Anchore/" + file
+		}
+	
+		// Need to have access to the file... ERROR: open
+		fileBytes, err := os.ReadFile(file)
 		if err != nil {
 			log.Fatalf("Error: %v", err)
 		}

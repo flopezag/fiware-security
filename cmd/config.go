@@ -3,8 +3,8 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
+	"io"
 )
 
 /* Structure of the config data
@@ -87,13 +87,13 @@ func ParseJSON() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Successfully Opened enablers.json")
+	fmt.Println("    Successfully Opened enablers.json")
 
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 
 	// read our opened jsonFile as a byte array.
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+	byteValue, _ := io.ReadAll(jsonFile)
 
 	// we unmarshal our byteArray which contains our
 	// jsonFile's content into 'users' which we defined above

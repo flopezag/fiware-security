@@ -36,7 +36,7 @@ func Docker_bench_security(compose, filename string) string {
 
 	// Pull the docker-compose.yaml (enabler) content
 	fmt.Print("Pulling Docker-Bench-Security content... ")
-	cmd := exec.Command(absPathDockerCompose, "pull")
+	cmd := exec.Command(absPathDockerCompose, "compose", "pull")
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()
@@ -50,7 +50,7 @@ func Docker_bench_security(compose, filename string) string {
 
 	// Launch the docker-compose.yml (enabler) content
 	fmt.Print("Launching Docker-Bench-Security... ")
-	cmd = exec.Command(absPathDockerCompose, "up", "-d")
+	cmd = exec.Command(absPathDockerCompose, "compose", "up", "-d")
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()

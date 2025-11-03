@@ -3,7 +3,6 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -15,7 +14,7 @@ func Clair(enabler, filename string) string {
 	var stderr bytes.Buffer
 
 	start := time.Now()
-	fmt.Println("Starting at: ", start)
+	fmt.Println("\nStarting at: ", start)
 
 	filename = filename + "_clair.json"
 
@@ -29,7 +28,8 @@ func Clair(enabler, filename string) string {
 
 	// Step 1:
 	fmt.Print("    Security analysis of " + enabler + " image...")
-	cmd := exec.Command(absPathDockerCompose, "run", "--rm", "scanner", enabler)
+	// TODO:     Security analysis of fiware/orion-ld:latest image...exit status 1: Creating network "clair_default" with the default driver
+	cmd := exec.Command(absPathDockerCompose, "compose", "run", "--rm", "scanner", enabler)
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()
@@ -49,7 +49,7 @@ func Clair(enabler, filename string) string {
 		}
 
 		// Step 3: Save the out into filename
-		err = ioutil.WriteFile(filename, result, 0644)
+		err = os.WriteFile(filename, result, 0644)
 
 		if err != nil {
 			log.Fatal(err)
